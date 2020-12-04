@@ -1,5 +1,7 @@
 Directory used for share back end source code.
 
+SOURCE OF SPRINT ONE RELASE IS V1.0.
+
 - v0.01: object structured.
 - v0.02: maintainerRole functionality added.
 - v0.03: competencies functionality added.
@@ -8,5 +10,6 @@ Directory used for share back end source code.
 - v0.06: material and site functionality added.
 - v0.07: procedures and typologies functionality added.
 - v0.08: workspace notes and user functionality added.
-
-Update: DbService_v1.0 is the Sprint One release.
+- v0.09: activity functionality added.
+- v0.10: part of login functionality added.
+- v1.0: various bug fixed.
