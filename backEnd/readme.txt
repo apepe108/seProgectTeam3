@@ -6,5 +6,6 @@ Directory used for share back end source code.
 - v0.04: roleCompetencies functionality added.
 - v0.05: site functionality added.
 - v0.06: material and site functionality added.
+- v0.07: procedures and typologies functionality added.
 
 Update: DbService_v1.0 is the Sprint One release.
