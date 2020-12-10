@@ -14,3 +14,4 @@ SOURCE OF SPRINT ONE RELASE IS V1.0.
 - v0.10: part of login functionality added.
 - v1.0: various bug fixed.
 - v1.01: access recording functionality addedd.
+- v1.02: activity view by week added.
