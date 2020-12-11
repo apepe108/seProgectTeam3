@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity Selection</title>
+
+    <!-- Link to Bootstrap and JQuery Libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/myStyle.css">
+
+    <!-- icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="index.html">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="PlannedActivity.html">Planned Activity</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="EWOManage.html">Emergency Work Order</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="ActivitySelection.html">Selection Activity</a>
+            </li>
+
+        </ul>
+        <div class="nav-item ml-auto ">
+            <form action="http://127.0.0.1:8080/DbManageService/logout" method="post">
+                <input type="submit" value="Logout" class="btn btn-dark">
+            </form>
+        </div>
+
+    </div>
+</nav>
+
+<header class="container">
+    <h3>Activity Selection Manager</h3>
+</header>
+<br>
+<!-- Banner Alert template and his section -->
+<template id="success-alert-template">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <h4>{message}</h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</template>
+<template id="fail-alert-template">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h4>{message}</h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</template>
+<div id="response-alert-section" class="container message"></div>
+
+
+<div class="container">
+    <div class="form-row">
+        <div class="form-group col-1">
+            <label for="year-selection" class="font-weight-bolder">Year: </label>
+        </div>
+        <div class=" col-3">
+            <input type="number" class="input-group form-control" id="year-selection" min="2020" name="year"
+                   required>
+        </div>
+        <div class="form-group col-1">
+            <label for="week-selection" class="font-weight-bolder">Week: </label>
+        </div>
+        <div class="col-3">
+            <select id="week-selection" class="input-group custom-select" name="week" required>
+                <option value="0"> Choose a Week...</option>
+            </select>
+        </div>
+        <div class="form-group col-2">
+            <button id="selection-button" class="btn btn-outline-primary" onclick="controller.fillTable()">
+                Display
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <section class="container">
+        <div class="row">
+
+            <table class="table table-bordered table-hover table-condensed" id="table">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Area</th>
+                    <th>Type</th>
+                    <th>Ext. Time</th>
+                </tr>
+                </thead>
+                <template id="table-template">
+                    <tr>
+                        <td class="myFont">{ID}</td>
+                        <td class="myFont">{Site}</td>
+                        <td class="myFont">{Typology}</td>
+                        <td class="myFont">{Time}</td>
+                        <td class="myIcon">{Select}</td>
+                    </tr>
+                </template>
+                <tbody id="table-rows"></tbody>
+                <tfoot></tfoot>
+            </table>
+        </div>
+    </section>
+</div>
+
+
+<!-- Popup per la selezione -->
+<div class="modal fade demo-popup " id="select-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title">Activity Selected</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal" onclick="close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body h-auto">
+                <form id="select-form">
+                    <div class="form-row">
+                        <input type="hidden" name="id" id="select-id">
+                        <input type="hidden" name="type" id="select-type">
+                        <input type="hidden" name="siteId" id="select-site">
+                        <input type="hidden" name="procedureId" id="select-procedure">
+                        <input type="hidden" name="typologyId" id="select-typology">
+                        <input type="hidden" name="time" id="select-time">
+                        <input type="hidden" name="interruptibility" id="select-interruptibility">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="select-day"> Day: </label>
+                            <input type="hidden" name="day" id="select-day-number">
+                            <input class="form-control" type="text" id="select-day"
+                                   readonly>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="select-week"> Week: </label>
+                            <input class="form-control" type="number" id="select-week" name="week" min="1" max="52"
+                                   readonly>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="select-year"> Year: </label>
+                            <input class="form-control" type="number" id="select-year" name="year" min="2020"
+                                   readonly>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="select-activity"> Activity to assign:</label>
+                            <input id="select-activity" class="form-control" type="text" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="select-notes"> Workspace Notes: </label>
+                            <textarea id="select-notes" class="form-control h-75" name="workspace"
+                                      placeholder="Edit the Workspace Note..."></textarea>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="select-description"> Intervention Description: </label>
+                            <input id="select-description" class="form-control " name="description"
+                                   readonly>
+
+                            <div class="form-row container p-2">
+                                <div class="form-group col">
+                                    <button id="smp-icon" type="button"
+                                            class="btn btn-outline-danger btn-sm btn-rounded "
+                                            onclick="controller.smp_request()">
+                                        <i class="fa fa-file-pdf-o fa-3x"></i></button>
+                                </div>
+                                <div class="form-group col">
+                                    <p id="smp-name"></p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="select-skills"> Skills Needed: </label>
+                            <ul id="select-skills" class="list-group">
+                            </ul>
+                        </div>
+
+                        <div class="col-9 invisible">
+                            <label for="table-material">Materials</label>
+                            <table id="table-material">
+                                <thead>
+                                <template id="material-template">
+                                    <tr>
+                                        <td>{Material}</td>
+                                    </tr>
+                                </template>
+                                </thead>
+                                <tbody id="material-rows">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" value="Submit" class="btn btn-primary" data-dismiss="modal"
+                        onclick="controller.forward()">Forward
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- JQuery api -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.js"></script>
+<!-- Bootstrap api -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+
+<!-- Slide Button links-->
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+      rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+
+<script src="../js/DbManageSource.js" charset="utf-8"></script>
+<script src="../js/ActivitySelectionController.js" charset="utf-8"></script>
+<script src="../js/FormUtil.js" charset="utf-8"></script>
+
+<script type="application/javascript">
+
+    // Instance controller on this page
+    const controller = new ActivitySelectionController(SELECTED_SERVICE_ENDPOINT, 'planned');
+
+    // When document is ready, get data and fill table
+    $(document).ready(function () {
+        controller.addWeekChoices();
+    });
+
+
+    // Listener on click on table
+    $("#table tbody").on("click", "tr", null, controller.handleClickOnRow);
+
+</script>
+
+</body>
+</html>

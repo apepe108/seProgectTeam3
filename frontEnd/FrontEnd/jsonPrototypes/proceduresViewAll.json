@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "Procedure 1",
+    "smp": "1"
+  },
+  {
+    "id": "2",
+    "name": "Procedure 2",
+    "smp": "0"
+  }
+]

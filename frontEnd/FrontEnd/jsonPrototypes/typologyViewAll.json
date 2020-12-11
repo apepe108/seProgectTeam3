@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "Typology 1",
+    "description": "Description typology 1."
+  },
+    {
+    "id": "2",
+    "name": "Typology 2",
+    "description": "Description typology 2."
+  }
+]

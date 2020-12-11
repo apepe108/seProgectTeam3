@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+
+    <!--Bootsrap 4 CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!--Fontawesome CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!--Custom styles-->
+    <link rel="stylesheet" type="text/css" href="css/loginCSS.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h3>Sign In</h3>
+            </div>
+            <div class="card-body">
+                <div id="fail-alert">
+                    <template id="fail-alert-template">
+                        <h5 class="text-danger">Login Failed</h5>
+                    </template>
+                </div>
+                <form id="loginForm" action="http://127.0.0.1:8080/DbManageService/login" method="post">
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input type="email" class="form-control" name=email placeholder="email" required>
+
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" class="form-control" name="password" placeholder="password" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="submitButton" type="submit" value="Login" class="btn float-right login_btn" onclick="login()">
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="response-alert-section" class="container message"></div>
+
+<script>
+    function getCurrentRecord() {
+        let err = 'false';
+        let searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has('err')) {
+            err = searchParams.get('err');
+        }
+        return err;
+    }
+
+    function openRecord( err ){
+        if (err === 'true') {
+            let html = $('#fail-alert-template').html();
+            $(html).prependTo('#fail-alert');
+        }
+    }
+
+    $(document).ready(function () {
+        openRecord(getCurrentRecord());
+    });
+</script>
+
+<!-- JQuery api -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.js"></script>
+<!-- Bootstrap api -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+
+<!-- Custom js -->
+<script src="./js/DbManageSource.js" charset="utf-8"></script>
+
+</body>
+
+</html>

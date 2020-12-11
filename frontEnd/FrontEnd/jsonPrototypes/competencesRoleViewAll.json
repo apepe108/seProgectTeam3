@@ -1,0 +1,35 @@
+[
+  {
+    "role": {
+      "id": "1",
+      "name": "Role 1",
+      "description": "Description role 1."
+    },
+    "competences": [
+      {
+        "id": "1",
+        "name": "Skill 1",
+        "description": "Description skill 1."
+      },
+      {
+        "id": "2",
+        "name": "Skill 2",
+        "description": "Description skill 2."
+      }
+    ]
+  },
+  {
+  "role": {
+    "id": "2",
+    "name": "Role 2",
+    "description": "Description role 2."
+  },
+  "competences": [
+      {
+        "id": "1",
+        "name": "Skill 1",
+        "description": "Description skill 1."
+      }
+    ]
+  }
+]

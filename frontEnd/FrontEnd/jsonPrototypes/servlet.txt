@@ -1,0 +1,72 @@
+login
+    login: /login PARAM: email, password, METHOD: post
+    get all access: /access-record
+
+user
+    get all: /user
+    get one: /user?id=1
+    create: /create-user PARAM: name, email, password, role METHOD: post
+    edit: /edit-user PARAM: id, name, email, password, role METHOD: post
+    delete: /delete-user?id=1
+
+maintainerRole
+    get all: /maintainer-role
+    get one: /maintainer-role?id=1
+    create: /create-maintainer-role PARAM: name, description  METHOD: post
+    edit: /edit-maintainer-role PARAM: id, name, description  METHOD: post
+    delete: /delete-maintainer-role?id=1
+
+competence
+    get all: /competencies
+
+roleCompetence
+    get all: /role-competencies
+    get one: /role-competencies?id=1
+    edit: /edit-role-competencies   PARAM: id-role, id-competence(ARRAY)      METHOD: post
+
+procedure
+    get all: /procedure
+    get smp: /smp?id=1
+    associate smp: /smp PARAM id_procedure, file_smp(FILE MULTIPART)    METHOD: post
+
+workspace notes
+    get all: /workspaces
+    get one: /workspaces?id=1
+    create: /create-workspaces PARAM: description, id_site(ARRAY)  METHOD: post
+    edit: /edit-workspaces PARAM: id, description, id_site(ARRAY)  METHOD: post
+    delete: /delete-workspaces?id=1
+
+activity
+    get all ewo: /activity?type=planned
+    (warning! getall obj.workspace.site is ever equal to an empty list)
+
+    get all planned: /activity?type=ewo
+    (warning! getall obj.workspace.site is ever equal to an empty list)
+
+    get-one: /activity?id=1
+
+    create: /create-activity PARAM: /create-activity PARAM: siteId, procedureId, typologyId, description, time, interruptibility, materials(ARRAY), day, week, year, type, workspace  METHOD: post
+
+    edit: /edit-activity PARAM: id, siteId, procedureId, typologyId, description, time, interruptibility, materials(ARRAY), day, week, year, type, workspace  METHOD: post
+
+    delete: /delete-activity?id=1
+
+material
+    get all: /material
+    edit: /edit-material PARAM: id, name, description
+    delete : /delete-material?id=1
+
+site
+    get all: /site
+
+typology
+    get all: /typology
+
+availability
+	/availability-weekly?activity-id=1
+	/availability-weekly?activity-id=1&maintainer-id=1
+	/availability-daily?activity-id=1
+	/availability-daily?activity-id=1&maintainer-id=1
+
+assignActivity
+	/assign PARAMETER activity-id, maintainer-id, week, day, slot-id[ARRAY]

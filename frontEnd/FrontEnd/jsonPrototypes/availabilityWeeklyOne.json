@@ -1,0 +1,23 @@
+{
+  "id": "2",
+  "name": "caio",
+  "competence_compliance": "2/4",
+  "availability": [
+    {
+      "day": "1",
+      "percentage": "90"
+    },
+    {
+      "day": "2",
+      "percentage": "90"
+    },
+    {
+      "day": "3",
+      "percentage": "90"
+    },
+    {
+      "day": "4",
+      "percentage": "90"
+    }
+  ]
+}

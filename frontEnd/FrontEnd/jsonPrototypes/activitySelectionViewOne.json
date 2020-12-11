@@ -1,0 +1,51 @@
+{
+  "id": "1",
+  "site": {
+    "id": "1",
+    "name": "Area 1"
+  },
+  "typology": {
+    "id": "1",
+    "name": "Typology 1"
+  },
+  "estimatedInterventionTime": "30",
+  "day": "3",
+  "week": "12",
+  "year": "2024",
+  "description": "Description Activity to Perform",
+  "workspace": {
+    "id": "3",
+    "description": "workspace note number 3"
+  },
+  "maintenanceProcedures": {
+    "id": "1",
+    "name": "Procedure 1",
+    "smp": "1"
+  },
+  "competences": [
+    {
+      "id" : "1",
+      "name" : "Skill 1 "
+    },
+    {
+      "id" : "2",
+      "name" : "skill 2"
+    },
+    {
+      "id" : "1",
+      "name" : "Skill 1 "
+    },
+    {
+      "id" : "2",
+      "name" : "skill 2"
+    },
+    {
+      "id" : "1",
+      "name" : "Skill 1 "
+    },
+    {
+      "id" : "2",
+      "name" : "skill 2"
+    }
+  ]
+}

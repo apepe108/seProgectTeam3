@@ -1,0 +1,38 @@
+[
+  {
+    "id" : "1",
+    "site" :{
+      "id" : "1",
+      "name" : "Area 1"
+    },
+    "typology" :{
+      "id" : "1",
+      "name" : "Typology 1"
+    },
+    "estimatedInterventionTime" : "30"
+  },
+  {
+    "id" : "2",
+    "site" :{
+      "id" : "2",
+      "name" : "Area 2"
+    },
+    "typology" :{
+      "id" : "2",
+      "name" : "Typology 2"
+    },
+    "estimatedInterventionTime" : "30"
+  },
+  {
+    "id" : "3",
+    "site" :{
+      "id" : "3",
+      "name" : "Area 3"
+    },
+    "typology" :{
+      "id" : "3",
+      "name" : "Typology 3"
+    },
+    "estimatedInterventionTime" : "30"
+  }
+]

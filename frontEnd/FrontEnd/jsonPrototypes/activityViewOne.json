@@ -1,0 +1,39 @@
+{
+  "id": "1",
+  "year": "2020",
+  "week": "43",
+  "site": {
+    "id": "1",
+    "name": "Factory Site 1 - Area 1"
+  },
+  "typology": {
+    "id": "1",
+    "name": "Electrical",
+    "description": "desc. electrical"
+  },
+  "description": "Activity description",
+  "estimatedInterventionTime": "30",
+  "interruptibility": "true",
+  "materials": [
+    {
+      "id": "1",
+      "name": "material_1",
+      "description": "desc_material 1"
+    },
+    {
+      "id": "2",
+      "name": "material_2",
+      "description": "desc_material 1"
+    }
+  ],
+  "maintenanceProcedures": {
+    "id": "1",
+    "name": "Procedure 1",
+    "smp": "1"
+  },
+  "workspace": {
+    "id": "1",
+    "description": "Description Workspace 1",
+    "site": []
+  }
+}

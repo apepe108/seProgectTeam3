@@ -1,0 +1,72 @@
+[
+  {
+    "id": "2",
+    "name": "caio",
+    "competence_compliance": "2/4",
+    "availability": [
+      {
+        "day": "1",
+        "percentage": "100"
+      },
+      {
+        "day": "2",
+        "percentage": "90"
+      },
+      {
+        "day": "3",
+        "percentage": "95"
+      },
+      {
+        "day": "4",
+        "percentage": "55"
+      },
+      {
+        "day": "5",
+        "percentage": "35"
+      },
+      {
+        "day": "6",
+        "percentage": "12"
+      },
+      {
+        "day": "7",
+        "percentage": "1"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "tizio",
+    "competence_compliance": "4/4",
+    "availability": [
+      {
+        "day": "1",
+        "percentage": "10"
+      },
+      {
+        "day": "2",
+        "percentage": "20"
+      },
+      {
+        "day": "3",
+        "percentage": "30"
+      },
+      {
+        "day": "4",
+        "percentage": "40"
+      },
+      {
+        "day": "5",
+        "percentage": "50"
+      },
+      {
+        "day": "6",
+        "percentage": "60"
+      },
+      {
+        "day": "7",
+        "percentage": "70"
+      }
+    ]
+  }
+]
