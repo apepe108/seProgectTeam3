@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Activity Selection</title>
+    <title>EWO Selection</title>
 
     <!-- Link to Bootstrap and JQuery Libraries -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
@@ -28,12 +28,13 @@
             <li class="nav-item">
                 <a class="nav-link" href="EWOManage.html">Emergency Work Order</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="ActivitySelection.html">Selection Activity</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="EWOSelection.html">Selection EWO</a>
             </li>
+
         </ul>
         <div class="nav-item ml-auto ">
             <form action="http://127.0.0.1:8080/DbManageService/logout" method="post">
@@ -45,7 +46,7 @@
 </nav>
 
 <header class="container">
-    <h3>Activity Selection Manager</h3>
+    <h3>EWO Selection Manager</h3>
 </header>
 <br>
 <!-- Banner Alert template and his section -->
@@ -67,28 +68,38 @@
 </template>
 <div id="response-alert-section" class="container message"></div>
 
-
 <div class="container">
     <div class="form-row">
-        <div class="form-group col-1">
+        <div class="form-group col">
             <label for="year-selection" class="font-weight-bolder">Year: </label>
-        </div>
-        <div class=" col-3">
             <input type="number" class="input-group form-control" id="year-selection" min="2020" name="year"
                    required>
         </div>
-        <div class="form-group col-1">
+        <div class="form-group col">
             <label for="week-selection" class="font-weight-bolder">Week: </label>
-        </div>
-        <div class="col-3">
             <select id="week-selection" class="input-group custom-select" name="week" required>
                 <option value="0"> Choose a Week...</option>
             </select>
         </div>
-        <div class="form-group col-2">
-            <button id="selection-button" class="btn btn-outline-primary" onclick="controller.fillTable()">
+        <div class="form-group col">
+            <label for="day-selection" class="font-weight-bolder"> Day: </label>
+            <select class="custom-select form-control" type="select" id="day-selection" name="day"
+                    required>
+                <option value="" name="day">Choose a Day...</option>
+                <option value="1" name="day">Monday</option>
+                <option value="2" name="day">Tuesday</option>
+                <option value="3" name="day">Wednesday</option>
+                <option value="4" name="day">Thursday</option>
+                <option value="5" name="day">Friday</option>
+                <option value="6" name="day">Saturday</option>
+                <option value="7" name="day">Sunday</option>
+            </select>
+        </div>
+        <div class="col" style="top: 32px">
+            <button id="selection-button" class="btn btn-outline-primary btn-md " onclick="controller.fillTable()">
                 Display
             </button>
+
         </div>
     </div>
 </div>
@@ -101,10 +112,9 @@
             <table class="table table-bordered table-hover table-condensed" id="table">
                 <thead class="thead-light">
                 <tr>
-                    <th>ID</th>
+                    <th>EWO ID</th>
                     <th>Area</th>
                     <th>Type</th>
-                    <th>Ext. Time</th>
                 </tr>
                 </thead>
                 <template id="table-template">
@@ -112,7 +122,6 @@
                         <td class="myFont">{ID}</td>
                         <td class="myFont">{Site}</td>
                         <td class="myFont">{Typology}</td>
-                        <td class="myFont">{Time}</td>
                         <td class="myIcon">{Select}</td>
                     </tr>
                 </template>
@@ -129,7 +138,7 @@
     <div class="modal-dialog modal-lg ">
         <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title">Activity Selected</h5>
+                <h5 class="modal-title">EWO Selected</h5>
                 <button type="button" class="close" aria-label="Close" data-dismiss="modal" onclick="close()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -141,20 +150,23 @@
                         <input type="hidden" name="id" id="select-id">
                         <input type="hidden" name="type" id="select-type">
                         <input type="hidden" name="siteId" id="select-site">
-                        <input type="hidden" name="procedureId" id="select-procedure">
                         <input type="hidden" name="typologyId" id="select-typology">
-                        <input type="hidden" name="time" id="select-time">
-                        <input type="hidden" name="interruptibility" id="select-interruptibility">
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="select-week"> Week: </label>
-                            <input class="form-control text-center" type="number" id="select-week" name="week" min="1" max="52"
+                        <div class="form-group col-md-2">
+                            <label for="select-day"> Day: </label>
+                            <input type="hidden" id="select-day-number" name="day">
+                            <input class="form-control" type="text" id="select-day"
                                    readonly>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
+                            <label for="select-week"> Week: </label>
+                            <input class="form-control" type="number" id="select-week" name="week" min="1" max="52"
+                                   readonly>
+                        </div>
+                        <div class="form-group col-md-2">
                             <label for="select-year"> Year: </label>
-                            <input class="form-control text-center" type="number" id="select-year" name="year" min="2020"
+                            <input class="form-control" type="number" id="select-year" name="year" min="2020"
                                    readonly>
                         </div>
 
@@ -168,35 +180,60 @@
                         <div class="form-group col-md-4">
                             <label for="select-notes"> Workspace Notes: </label>
                             <textarea id="select-notes" class="form-control h-75" name="workspace"
-                                      placeholder="Edit the Workspace Note..."></textarea>
+                                      readonly></textarea>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for="select-description"> Intervention Description: </label>
-                            <input id="select-description" class="form-control text-center" name="description"
-                                   readonly>
+                            <textarea id="select-description" class="form-control " name="description"
+                                      placeholder="Insert Description"></textarea>
 
                             <div class="form-row container p-2">
-                                <div class="form-group col">
-                                    <button id="smp-icon" type="button"
-                                            class="btn btn-outline-danger btn-sm btn-rounded "
-                                            onclick="controller.smp_request()">
-                                        <i class="fa fa-file-pdf-o fa-3x"></i></button>
+                                <div class="form-group col align-content-end">
+                                    <label for="select-time">Estimated Intervention Time</label>
                                 </div>
                                 <div class="form-group col">
-                                    <p id="smp-name"></p>
+                                    <input id="select-time" class="form-control " name="time">
                                 </div>
+
                             </div>
 
                         </div>
 
-                        <div class="form-group col-md-4">
-                            <label for="select-skills"> Skills Needed: </label>
-                            <ul id="select-skills" class="list-group">
-                            </ul>
+                        <div class="form-group col-md-4 ">
+                            <label for="table-competence">Skills Needed</label>
+                            <table id="table-competence" class="list-group">
+                                <thead>
+                                <template id="competence-template">
+                                    <tr>
+                                        <td>{Competence}</td>
+                                    </tr>
+                                </template>
+                                </thead>
+                                <tbody id="competence-rows" class="list-group-item input-group">
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
 
-                        <div class="col-9 invisible">
+                    <div class="form-row ">
+                        <div class="form-group col-3">
+                            <label>Interruptibility</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="select-interruptibility-true"
+                                       name="interruptibility" value="true" checked>
+                                <label class="form-check-label" for="select-interruptibility-true">
+                                    True
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="select-interruptibility-false"
+                                       name="interruptibility"
+                                       value="false">
+                                <label class="form-check-label" for="select-interruptibility-false">False</label><br>
+                            </div>
+                        </div>
+                        <div class="col-9">
                             <label for="table-material">Materials</label>
                             <table id="table-material">
                                 <thead>
@@ -240,19 +277,18 @@
 
 
 <script src="../js/DbManageSource.js" charset="utf-8"></script>
-<script src="../js/ActivitySelectionController.js" charset="utf-8"></script>
+<script src="../js/EWOSelectionController.js" charset="utf-8"></script>
 <script src="../js/FormUtil.js" charset="utf-8"></script>
 
 <script type="application/javascript">
 
     // Instance controller on this page
-    const controller = new ActivitySelectionController(SELECTED_SERVICE_ENDPOINT, 'planned');
+    const controller = new EWOSelectionController(SELECTED_SERVICE_ENDPOINT, 'ewo');
 
     // When document is ready, get data and fill table
     $(document).ready(function () {
         controller.addWeekChoices();
     });
-
 
     // Listener on click on table
     $("#table tbody").on("click", "tr", null, controller.handleClickOnRow);
