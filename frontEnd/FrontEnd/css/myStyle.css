@@ -42,9 +42,3 @@ tr.selected {
 .pw {
   -webkit-text-security: disc;
 }
-.backbutton {
-	border-radius: 10%;
-	position: fixed;
-	bottom: 20px;
-	left: 40px;
-}

@@ -31,6 +31,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="ActivitySelection.html">Selection Activity</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="EWOSelection.html">Selection EWO</a>
+            </li>
         </ul>
         <div class="nav-item ml-auto ">
             <form action="http://127.0.0.1:8080/DbManageService/logout" method="post">
@@ -72,7 +75,6 @@
                 <thead class="thead-light">
                 <tr>
                     <th>ID</th>
-                    <th>Day</th>
                     <th>Week</th>
                     <th>Year</th>
                     <th>Site</th>
@@ -88,7 +90,6 @@
                 <template id="table-template">
                     <tr>
                         <td class="myFont">{ID}</td>
-                        <td class="myFont">{Day}</td>
                         <td class="myFont">{Week}</td>
                         <td class="myFont">{Year}</td>
                         <td class="myFont">{Site}</td>
@@ -134,30 +135,17 @@
                         <input type="hidden" name="type" id="insert-type">
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="insert-day"> Day </label>
-                            <select class="custom-select form-control" type="select" id="insert-day" name="day"
-                                    required>
-                                <option value="1" name="day">Monday</option>
-                                <option value="2" name="day">Tuesday</option>
-                                <option value="3" name="day">Wednesday</option>
-                                <option value="4" name="day">Thursday</option>
-                                <option value="5" name="day">Friday</option>
-                                <option value="6" name="day">Saturday</option>
-                                <option value="7" name="day">Sunday</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="insert-week"> Week </label>
-                            <input class="form-control" type="number" id="insert-week" name="week" min="1" max="52"
+                            <input class="form-control text-center" type="number" id="insert-week" name="week" min="1" max="52"
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="insert-year"> Year </label>
-                            <input class="form-control" type="number" id="insert-year" name="year" min="2020"
+                            <input class="form-control text-center" type="number" id="insert-year" name="year" min="2020"
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Interruptibility</label><br>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" id="insert-interruptibility-true"
@@ -205,7 +193,7 @@
                         <div class="form-group col-md-3">
                             <label class="mr-sm-2" class="form-check-input" for="insert-time"> Ext. Intervention
                                 Time: </label>
-                            <input class="form-control" type="text" id="insert-time" name="time">
+                            <input class="form-control text-center" type="text" id="insert-time" name="time">
                         </div>
                     </div>
 
@@ -268,30 +256,17 @@
                         <input type="hidden" name="type" id="edit-type">
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="edit-day"> Day </label>
-                            <select class="custom-select form-control" type="select" id="edit-day" name="day"
-                                    required>
-                                <option value="1" name="day">Monday</option>
-                                <option value="2" name="day">Tuesday</option>
-                                <option value="3" name="day">Wednesday</option>
-                                <option value="4" name="day">Thursday</option>
-                                <option value="5" name="day">Friday</option>
-                                <option value="6" name="day">Saturday</option>
-                                <option value="7" name="day">Sunday</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="edit-week"> Week </label>
-                            <input class="form-control" type="number" id="edit-week" name="week" min="1" max="52"
+                            <input class="form-control text-center" type="number" id="edit-week" name="week" min="1" max="52"
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="edit-year"> Year </label>
-                            <input class="form-control" type="number" id="edit-year" name="year" min="2020"
+                            <input class="form-control text-center" type="number" id="edit-year" name="year" min="2020"
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Interruptibility</label><br>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" id="edit-interruptibility-true"
@@ -339,7 +314,7 @@
                         <div class="form-group col-md-3">
                             <label class="mr-sm-2" class="form-check-input" for="edit-time"> Ext. Intervention
                                 Time: </label>
-                            <input class="form-control" type="text" id="edit-time" name="time">
+                            <input class="form-control text-center" type="text" id="edit-time" name="time">
                         </div>
                     </div>
 
