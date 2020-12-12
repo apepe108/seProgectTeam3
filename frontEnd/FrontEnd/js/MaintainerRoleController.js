@@ -9,13 +9,6 @@ class MaintainerRoleController {
         this.createEndPoint = endPoint + "/create-maintainer-role";
         this.editEndPoint = endPoint + "/edit-maintainer-role";
         this.deleteEndPoint = endPoint + "/delete-maintainer-role";
-        this.selectedRowID = -1;
-        this.doEdit = false;
-        this.doDelete = false;
-    }
-
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
     }
 
     /**
@@ -43,7 +36,7 @@ class MaintainerRoleController {
      * @param data a JSON representation of data
      */
     renderGUI(data) {
-        let controller = this;
+
         // If table not empty
         $('#table td').remove();
 
@@ -56,17 +49,7 @@ class MaintainerRoleController {
             row = row.replace(/{ID}/ig, obj.id);
             row = row.replace(/{Name}/ig, obj.name);
             row = row.replace(/{Description}/ig, obj.description);
-            let editIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#edit-modal" onclick="controller.doEdit=true">'
-                +'<i class="fas fa-edit mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Edit}/ig, editIcon);
 
-            let deleteIcon = '<button class="btn btn-outline-danger btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#delete-modal" onclick="controller.doDelete=true">'
-                +'<i class="fas fa-trash mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Delete}/ig, deleteIcon);
             $('#table-rows').append(row);
         });
 
@@ -103,10 +86,11 @@ class MaintainerRoleController {
     };
 
     /**
-     * Open Model, download Json data and render.
+     * Open Model, download Json data and render
+     * @param id the id of the row to edit.
      */
-    viewEdit() {
-        $.get(this.viewEndPoint, {id: this.selectedRowID}, function (data) {
+    viewEdit(id) {
+        $.get(this.viewEndPoint, {id: id}, function (data) {
             $('#edit-id').val(data.id);
             $('#edit-name').val(data.name);
             $('#edit-description').val(data.description);
@@ -136,7 +120,6 @@ class MaintainerRoleController {
             $('#edit-name').val('');
             $('#edit-description').val('');
             controller.fillTable();
-            controller.unselect();
         }).fail(function () {
             controller.renderAlert('Error while editing. Try again.', false);
         });
@@ -144,9 +127,10 @@ class MaintainerRoleController {
 
     /**
      * Open Model, download Json data and render.
+     * @param id the id of the row to delete
      */
-    deleteView() {
-        $.get(this.viewEndPoint, {id: this.selectedRowID}, function (data) {
+    deleteView(id) {
+        $.get(this.viewEndPoint, {id: id}, function (data) {
             $('#delete-id').val(data.id);
             $('#delete-name').html(data.name);
         }).done(function () {
@@ -183,9 +167,7 @@ class MaintainerRoleController {
             controller.renderAlert('Error: Not all fields have been entered correctly. Please try again', false)
             return;
         }
-
         let data = $('#insert-form').serialize();
-
         $.post(this.createEndPoint, data, function () { // waiting for response-
 
         }).done(function () { // success response-
@@ -196,46 +178,10 @@ class MaintainerRoleController {
             $('#add-description').val('');
             // charge new data.
             controller.fillTable();
-            controller.unselect();
         }).fail(function () { // fail response
             controller.renderAlert('Error while inserting. Try again.', false);
         });
-    };
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // ability modify and edit button
-        $('#edit-button').prop('disabled', false);
-        $('#delete-button').prop('disabled', false);
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if(controller.doEdit === true){
-            controller.doEdit = false;
-            controller.viewEdit();
-        }
-
-        if(controller.doDelete === true){
-            controller.doDelete = false;
-            controller.deleteView();
-        }
-    };
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('#edit-button').prop('disabled', true);
-        $('#delete-button').prop('disabled', true);
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
-    };
+    }
 }
+
+

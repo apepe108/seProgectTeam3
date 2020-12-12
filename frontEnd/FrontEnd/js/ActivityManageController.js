@@ -17,13 +17,6 @@ class ActivityManageController {
         this.typologyEndPoint = endPoint + "/typology";
         this.proceduresEndPoint = endPoint + "/procedure"
         this.workspaceEndPoint = endPoint + "/workspaces"
-        this.selectedRowID = -1;
-        this.doEdit = false;
-        this.doDelete = false;
-    }
-
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
     }
 
     /**
@@ -84,23 +77,12 @@ class ActivityManageController {
             row = row.replace(/{Day}/ig, controller.getDay(obj.day));
             row = row.replace(/{Week}/ig, obj.week);
             row = row.replace(/{Year}/ig, obj.year);
-            if (obj.workspace.id != 0) {
+
+            if (obj.workspace.id !== "0") {
                 row = row.replace(/{Notes}/ig, obj.workspace.description);
             } else {
                 row = row.replace(/{Notes}/ig, "");
             }
-
-            let editIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#edit-modal" onclick="controller.doEdit=true">'
-                +'<i class="fas fa-edit mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Edit}/ig, editIcon);
-
-            let deleteIcon = '<button class="btn btn-outline-danger btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#delete-modal" onclick="controller.doDelete=true">'
-                +'<i class="fas fa-trash mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Delete}/ig, deleteIcon);
 
             $('#table-rows').append(row);
         });
@@ -139,8 +121,9 @@ class ActivityManageController {
 
     /**
      * Open Edit Modal, download Json data and render.
+     * @param id the id of the row to edit
      */
-    viewEdit() {
+    viewEdit(id) {
         let controller = this
 
         $('#edit-typology option').remove();
@@ -151,7 +134,7 @@ class ActivityManageController {
         controller.getTypologies('#edit-typology')
         controller.getMaterials('#edit-table-materials');
         controller.getProcedures('#edit-procedure')
-        $.get(controller.viewEndPoint, {id: controller.selectedRowID}, function (data) {
+        $.get(controller.viewEndPoint, {id: id}, function (data) {
             $('#edit-id').val(data.id);
             $('#edit-type').val(controller.type);
             $("#edit-site").val(data.site.id)
@@ -159,7 +142,6 @@ class ActivityManageController {
             $('#edit-procedure').val(data.maintenanceProcedures.id)
             $('#edit-description').val(data.description);
             $('#edit-time').val(data.estimatedInterventionTime);
-
 
             if(data.interruptibility === 'true'){
                 $('#edit-interruptibility-true').prop('checked', true);
@@ -172,7 +154,7 @@ class ActivityManageController {
 
             controller.markMaterialsAlreadyPossessed(data.materials);
 
-            if (data.workspace.id != 0) {
+            if (data.workspace.id !== "0") {
                 $('#edit-notes').val(data.workspace.description);
             }
 
@@ -200,7 +182,6 @@ class ActivityManageController {
             controller.renderAlert('Activity edited correctly.', true);
             // success
             controller.fillTable();
-            controller.unselect();
         }).fail(function () {
             controller.renderAlert('Error while editing. Try again.', false);
         });
@@ -208,10 +189,11 @@ class ActivityManageController {
 
     /**
      * Open Delete Modal.
+     * @param id the id of the row to delete
      */
-    deleteView() {
+    deleteView(id) {
         let controller = this;
-        $.get(controller.viewEndPoint, {id: controller.selectedRowID}, function (data) {
+        $.get(controller.viewEndPoint, {id: id}, function (data) {
             $('#delete-id').val(data.id);
         }).done(function () {
             $('#delete-modal').modal('show')
@@ -233,7 +215,6 @@ class ActivityManageController {
             controller.renderAlert('Activity deleted successfully.', true);
             // charge new data.
             controller.fillTable();
-            controller.unselect();
         }).fail(function () {
             controller.renderAlert('Error while deleting. Try again.', false);
         });
@@ -243,7 +224,6 @@ class ActivityManageController {
      * Open Insert Modal, calling the function to update the possible choices
      */
     insertView() {
-
 
         $('#insert-typology option').remove();
         $('#insert-site option').remove();
@@ -280,13 +260,12 @@ class ActivityManageController {
             $('#add-description').val('');
             // charge new data.
             controller.fillTable();
-            controller.unselect();
             controller.clearModal()
         }).fail(function () { // fail response
             controller.renderAlert('Error while inserting. Try again.', false);
         });
 
-    };
+    }
 
 
     /**
@@ -428,6 +407,7 @@ class ActivityManageController {
      * Retrieves the data of workspaces and set the field "Workspace note" with the workspace related to the currently
      * selected site
      * @param siteId the site currently selected
+     * @param form
      */
     setRelatedWorkspace(siteId, form){
         let flag = false;
@@ -477,42 +457,5 @@ class ActivityManageController {
                 return "";
         }
     }
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // ability modify and edit button
-        $('#edit-button').prop('disabled', false);
-        $('#delete-button').prop('disabled', false);
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if(controller.doEdit === true){
-            controller.doEdit = false;
-            controller.viewEdit();
-        }
-
-        if(controller.doDelete === true){
-            controller.doDelete = false;
-            controller.deleteView();
-        }
-    };
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('#edit-button').prop('disabled', true);
-        $('#delete-button').prop('disabled', true);
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
-    };
-
 
 }

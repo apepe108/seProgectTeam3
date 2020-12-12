@@ -10,13 +10,7 @@ class RoleCompetencesController {
         this.viewEndPoint = endPoint + "/role-competencies";
         this.editEndPoint = endPoint + "/edit-role-competencies";
         this.competencesViewEndpoint = endPoint + "/competencies";
-        this.selectedRowID = -1;
-        this.doEdit = false;
 
-    }
-
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
     }
 
     /**
@@ -62,12 +56,6 @@ class RoleCompetencesController {
             });
             list = list + "</ul>";
             row = row.replace(/{Competences}/ig, list);
-
-            let editIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#edit-modal" onclick="controller.doEdit=true">'
-                +'<i class="fas fa-edit mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Edit}/ig, editIcon);
             $('#table-rows').append(row);
         });
 
@@ -105,14 +93,15 @@ class RoleCompetencesController {
 
     /**
      * Open Model, download Json data and render.
+     * @param id the id of the row to edit
      */
-    viewEdit() {
+    viewEdit(id) {
         let controller = this
         $.getJSON(controller.competencesViewEndpoint, function (data) {
             controller.addCheckBoxes(data);
         }).done(function () {
             // Request Data for selected row
-            $.getJSON(controller.viewEndPoint, {id: controller.selectedRowID}, function (data) {
+            $.getJSON(controller.viewEndPoint, {id: id}, function (data) {
                 $('#edit-id').val(data.role.id);
                 $('#edit-name').val(data.role.name);
                 controller.markCompetencesAlreadyPossessed(data.competences);
@@ -165,7 +154,6 @@ class RoleCompetencesController {
     edit() {
         let controller = this;
         let data = $('#edit-form').serialize();
-        console.log(data)
 
         $.post(this.editEndPoint, data, function () {
             // waiting
@@ -175,42 +163,10 @@ class RoleCompetencesController {
             // success
 
             controller.fillTable();
-            controller.unselect();
+
         }).fail(function () {
             controller.renderAlert('Error while editing. Try again.', false);
         });
     }
 
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // ability modify and edit button
-        $('#edit-button').prop('disabled', false);
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if(controller.doEdit === true){
-            controller.doEdit = false;
-            controller.viewEdit();
-        }
-
-    }
-
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('#edit-button').prop('disabled', true);
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
-    }
 }

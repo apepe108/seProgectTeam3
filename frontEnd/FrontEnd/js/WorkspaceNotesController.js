@@ -7,19 +7,13 @@ class WorkspaceNotesController {
      */
     constructor(endPoint) {
         this.viewEndPoint = endPoint + "/workspaces";
-        this.sitesEndPoint = endPoint + "/site"
-
         this.createEndPoint = endPoint + "/create-workspaces";
         this.editEndPoint = endPoint + "/edit-workspaces";
         this.deleteEndPoint = endPoint + "/delete-workspaces";
-        this.selectedRowID = -1;
-        this.doEdit = false;
-        this.doDelete = false;
+
+        this.sitesEndPoint = endPoint + "/site"
     }
 
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
-    }
 
     /**
      * Fetch JSON data from the service, then call a function for rendering the View
@@ -64,17 +58,6 @@ class WorkspaceNotesController {
             list = list + "</ul>"
             row = row.replace(/{Sites}/ig, list)
 
-            let editIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#edit-modal" onclick="controller.doEdit=true">'
-                +'<i class="fas fa-edit mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Edit}/ig, editIcon);
-
-            let deleteIcon = '<button class="btn btn-outline-danger btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#delete-modal" onclick="controller.doDelete=true">'
-                +'<i class="fas fa-trash mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Delete}/ig, deleteIcon);
             $('#table-rows').append(row);
         });
 
@@ -112,13 +95,14 @@ class WorkspaceNotesController {
 
     /**
      * Open Model, download Json data and render.
+     * @param id the id of the row to edit
      */
-    viewEdit() {
+    viewEdit(id) {
         let controller = this;
         $.getJSON(controller.sitesEndPoint, function (data) {
             controller.addCheckBoxes(data, '#edit-table-site');
         }).done(function () {
-            $.getJSON(controller.viewEndPoint, {id: controller.selectedRowID}, function (data) {
+            $.getJSON(controller.viewEndPoint, {id: id}, function (data) {
                 $('#edit-id').val(data.id);
                 $('#edit-description').val(data.description);
                 controller.markAsChecked(data.site);
@@ -141,7 +125,7 @@ class WorkspaceNotesController {
             let elem = staticHtml;
             elem = elem.replace(/{Site}/ig,
                 "<div class='container d-inline-block'>" +
-                "<input type='checkbox' class='checkbox' name='id-site' value='" + obj.id + "'>\t" + obj.name + "</div>");
+                "<input type='checkbox' class='checkbox' name='id-site' value='" + obj.id + "'>" + obj.name + "</div>");
             $(table + '-rows').append(elem);
         });
     }
@@ -178,10 +162,9 @@ class WorkspaceNotesController {
             // show alert
             controller.renderAlert('Workspace Note edited successfully.', true);
             // success
-            $('#edit-id').val('');
-            $('#edit-description').val('');
+
             controller.fillTable();
-            controller.unselect();
+
         }).fail(function () {
             controller.renderAlert('Error while editing. Try again.', false);
         });
@@ -189,9 +172,10 @@ class WorkspaceNotesController {
 
     /**
      * Open Model, download Json data and render.
+     * @param id the id of the row to delete
      */
-    deleteView() {
-        $.get(this.viewEndPoint, {id: this.selectedRowID}, function (data) {
+    deleteView(id) {
+        $.get(this.viewEndPoint, {id: id}, function (data) {
             $('#delete-id').val(data.id);
             $('#delete-name').html(data.name)
         }).done(function () {
@@ -213,7 +197,6 @@ class WorkspaceNotesController {
             controller.renderAlert('Workspace Note successfully deleted.', true);
             // charge new data.
             controller.fillTable();
-            controller.unselect();
         }).fail(function () {
             controller.renderAlert('Error while deleting. Try again.', false);
         });
@@ -222,12 +205,13 @@ class WorkspaceNotesController {
     /**
      * Open the insert modal and render
      */
-    insertView(){
+    insertView() {
         let controller = this;
-        $.getJSON(this.sitesEndPoint, function(data){
+        $.getJSON(this.sitesEndPoint, function (data) {
             controller.addCheckBoxes(data, '#insert-table-site')
         });
     }
+
     /**
      * Call insert service and get requested data with post method. Show an alert showing the response.
      */
@@ -238,11 +222,8 @@ class WorkspaceNotesController {
             controller.renderAlert('Error: Not all fields have been entered correctly. Please try again', false)
             return;
         }
-
         let data = $('#insert-form').serialize();
-
         $.post(this.createEndPoint, data, function () { // waiting for response-
-
         }).done(function () { // success response-
             // Set success alert.
             controller.renderAlert('Workspace Note successfully entered.', true);
@@ -250,50 +231,9 @@ class WorkspaceNotesController {
             $('#add-description').val('');
             // charge new data.
             controller.fillTable();
-            controller.unselect();
         }).fail(function () { // fail response
             controller.renderAlert('Error while inserting. Try again.', false);
         });
         $('insert-form').modal('hide')
     }
-    ;
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // ability modify and edit button
-        $('#edit-button').prop('disabled', false);
-        $('#delete-button').prop('disabled', false);
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if(controller.doEdit === true){
-            controller.doEdit = false;
-            controller.viewEdit();
-        }
-
-        if(controller.doDelete === true){
-            controller.doDelete = false;
-            controller.deleteView();
-        }
-    }
-
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('#edit-button').prop('disabled', true);
-        $('#delete-button').prop('disabled', true);
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
-    }
-
-
 }

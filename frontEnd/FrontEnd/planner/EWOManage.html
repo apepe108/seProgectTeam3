@@ -100,8 +100,18 @@
                         <td class="myFont">{Interruptibility}</td>
                         <td class="myFont">{Materials}</td>
                         <td class="myFont">{Notes}</td>
-                        <td class="myIcon">{Edit}</td>
-                        <td class="myIcon">{Delete}</td>
+                        <td class="myIcon">
+                            <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                    data-target="#edit-modal" onclick="controller.viewEdit({ID})">
+                                <i class="fas fa-edit mr-2"></i>
+                            </button>
+                        </td>
+                        <td class="myIcon">
+                            <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                    data-target="#delete-modal" onclick="controller.deleteView({ID})">
+                                <i class="fas fa-trash mr-2"></i>
+                            </button>
+                        </td>
                     </tr>
                 </template>
                 <tbody id="table-rows"></tbody>
@@ -109,7 +119,8 @@
             </table>
         </div>
         <div class="row">
-            <button id="insert-button" class="btn btn-outline-primary btn-circle fixedbutton" disabled data-toggle="modal"
+            <button id="insert-button" class="btn btn-outline-primary btn-circle fixedbutton" disabled
+                    data-toggle="modal"
                     data-target="#insert-modal" onclick="controller.insertView()">
                 Insert
             </button>
@@ -149,12 +160,14 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label for="insert-week"> Week </label>
-                            <input class="form-control text-center" type="number" id="insert-week" name="week" min="1" max="52"
+                            <input class="form-control text-center" type="number" id="insert-week" name="week" min="1"
+                                   max="52"
                                    required>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="insert-year"> Year </label>
-                            <input class="form-control text-center" type="number" id="insert-year" name="year" min="2020"
+                            <input class="form-control text-center" type="number" id="insert-year" name="year"
+                                   min="2020"
                                    required>
                         </div>
                         <div class="form-group col-md-3">
@@ -167,7 +180,8 @@
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="insert-interruptibility-false" name="interruptibility"
+                                <input class="form-check-input" type="radio" id="insert-interruptibility-false"
+                                       name="interruptibility"
                                        value="false">
                                 <label class="form-check-label" for="insert-interruptibility-false">False</label><br>
                             </div>
@@ -177,12 +191,14 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label class="mr-sm-2" for="insert-site"> Site: </label>
-                            <select class="custom-select mr-sm-2" type="select" id="insert-site" class="col-sm-3 form-control" name="siteId"
+                            <select class="custom-select mr-sm-2" type="select" id="insert-site"
+                                    class="col-sm-3 form-control" name="siteId"
                                     required></select>
                         </div>
                         <div class="form-group col-md-4">
                             <label class="mr-sm-2" for="insert-typology"> Typology: </label>
-                            <select class="custom-select mr-sm-2" type="select" id="insert-typology" class="col-sm-3 form-control" name="typologyId"
+                            <select class="custom-select mr-sm-2" type="select" id="insert-typology"
+                                    class="col-sm-3 form-control" name="typologyId"
                                     required></select>
                         </div>
                     </div>
@@ -190,10 +206,12 @@
                     <div class="form-row">
                         <div class="form-group col-md-9">
                             <label class="mr-sm-2" for="insert-description"> Description: </label>
-                            <textarea class="form-control" id="insert-description" name="description" placeholder="Insert the Description..."></textarea>
+                            <textarea class="form-control" id="insert-description" name="description"
+                                      placeholder="Insert the Description..."></textarea>
                         </div>
                         <div class="form-group col-md-3">
-                            <label class="mr-sm-2" class="form-check-input" for="insert-time"> Ext. Intervention Time: </label>
+                            <label class="mr-sm-2" class="form-check-input" for="insert-time"> Ext. Intervention
+                                Time: </label>
                             <input class="form-control text-center" type="text" id="insert-time" name="time">
                         </div>
                     </div>
@@ -272,7 +290,8 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label for="edit-week"> Week </label>
-                            <input class="form-control text-center" type="number" id="edit-week" name="week" min="1" max="52"
+                            <input class="form-control text-center" type="number" id="edit-week" name="week" min="1"
+                                   max="52"
                                    required>
                         </div>
                         <div class="form-group col-md-3">
@@ -290,7 +309,8 @@
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="edit-interruptibility-false" name="interruptibility"
+                                <input class="form-check-input" type="radio" id="edit-interruptibility-false"
+                                       name="interruptibility"
                                        value="false">
                                 <label class="form-check-label" for="edit-interruptibility-false">False</label><br>
                             </div>
@@ -300,12 +320,14 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label class="mr-sm-2" for="edit-site"> Site: </label>
-                            <select class="custom-select mr-sm-2" type="select" id="edit-site" class="col-sm-3 form-control" name="siteId"
+                            <select class="custom-select mr-sm-2" type="select" id="edit-site"
+                                    class="col-sm-3 form-control" name="siteId"
                                     required></select>
                         </div>
                         <div class="form-group col-md-4">
                             <label class="mr-sm-2" for="edit-typology"> Typology: </label>
-                            <select class="custom-select mr-sm-2" type="select" id="edit-typology" class="col-sm-3 form-control" name="typologyId"
+                            <select class="custom-select mr-sm-2" type="select" id="edit-typology"
+                                    class="col-sm-3 form-control" name="typologyId"
                                     required></select>
                         </div>
                     </div>
@@ -313,10 +335,12 @@
                     <div class="form-row">
                         <div class="form-group col-md-9">
                             <label class="mr-sm-2" for="edit-description"> Description: </label>
-                            <textarea class="form-control" id="edit-description" name="description" placeholder="edit the Description..."></textarea>
+                            <textarea class="form-control" id="edit-description" name="description"
+                                      placeholder="edit the Description..."></textarea>
                         </div>
                         <div class="form-group col-md-3">
-                            <label class="mr-sm-2" class="form-check-input" for="edit-time"> Ext. Intervention Time: </label>
+                            <label class="mr-sm-2" class="form-check-input" for="edit-time"> Ext. Intervention
+                                Time: </label>
                             <input class="form-control text-center" type="text" id="edit-time" name="time">
                         </div>
                     </div>
@@ -408,7 +432,6 @@
 <script src="../js/FormUtil.js" charset="utf-8"></script>
 
 
-
 <script type="application/javascript">
 
     // Instance controller on this page
@@ -418,10 +441,7 @@
     $(document).ready(function () {
         controller.fillTable();
     });
-
-    // Listener on click on table
-    $("#table tbody").on("click", "tr", null, controller.handleClickOnRow);
-
+    
     // Listener on Site Selection
     $('#insert-site').on('change', function () {
         controller.setRelatedWorkspace(this.value, '#insert')

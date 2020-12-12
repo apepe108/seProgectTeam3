@@ -9,13 +9,7 @@ class SMPController {
         this.procedureEndPoint = endPoint + "/procedure";
         this.smpEndPoint = endPoint + "/view-smp";
         this.uploadSmpEndPoint = endPoint + "/smp";
-        this.selectedRowID = -1;
-        this.doEdit = false;
 
-    }
-
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
     }
 
     /**
@@ -53,17 +47,11 @@ class SMPController {
             let row = staticHtml;
             row = row.replace(/{ID}/ig, obj.id);
             row = row.replace(/{Name}/ig, obj.name);
-            if (obj.smp == 0) {
+            if (obj.smp === "0") {
                 row = row.replace(/{SMP}/ig, " ")
             } else {
                 row = row.replace(/{SMP}/ig, '<a href="' + controller.smpEndPoint + '?id=' + obj.smp + '" type="button" class="btn btn-outline-primary btn-sm btn-rounded"><i class=\"fas fa-download mr-2\"></i></a>');
             }
-
-            let editIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#new-smp-modal" onclick="controller.doEdit=true">'
-                +'<i class="fas fa-edit mr-2"></i>'+
-                '        </button>';
-            row = row.replace(/{Edit}/ig, editIcon);
             $('#table-rows').append(row);
         });
 
@@ -75,10 +63,6 @@ class SMPController {
                 $("tfoot tr:first").remove();
             })
         }
-    }
-
-    display(callback) {
-        callback(controller.selectedRowID)
     }
 
     /**
@@ -101,10 +85,14 @@ class SMPController {
             .queue(function () {
                 $(this).remove();
             });
-    };
+    }
 
-    viewEdit() {
-        $('#procedure-id').val(this.selectedRowID);
+    /**
+     * Open the Modal for editing the procedure's SMP
+     * @param id the id of the row to edit
+     */
+    viewEdit(id) {
+        $('#procedure-id').val(id);
     }
 
     /**
@@ -132,41 +120,11 @@ class SMPController {
             success: function (data) {
                 controller.renderAlert('SMP upload successfully.', true);
                 controller.fillTable();
-                controller.unselect();
             },
             error: function (e) {
                 controller.renderAlert('Error while uploading. Try again.', false);
             }
         });
     }
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // ability modify and edit button
-        $('#new-smp-button').prop('disabled', false);
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if(controller.doEdit === true){
-            controller.doEdit = false;
-            controller.viewEdit();
-        }
-    };
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('#new-smp-button').prop('disabled', true);
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
-    };
 
 }

@@ -14,13 +14,8 @@ class ActivitySelectionController {
         this.smpEndPoint = endPoint + "/view-smp";
         this.materialsEndPoint = endPoint + "/material";
 
-        this.selectedRowID = -1;
-        this.doSelect = false;
     }
 
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
-    }
 
     /**
      * Fetch JSON data from the service, then call a function for rendering the View
@@ -39,16 +34,15 @@ class ActivitySelectionController {
             return;
         }
 
-
         /* Call the microservice and evaluate data and result status */
-        $.getJSON(this.viewEndPoint, {week:week, year:year, type:this.type} ,function (data) {
+        $.getJSON(this.viewEndPoint, {week:week, year:year, type:type} ,function (data) {
             controller.renderGUI(data);
         }).done(function () {
            // controller.renderAlert('Data charged successfully.', true);
         }).fail(function () {
             controller.renderAlert('Error while charging data. Retry in a few second.', false);
         });
-        // Caricamento
+
     }
 
     /**
@@ -71,11 +65,6 @@ class ActivitySelectionController {
             row = row.replace(/{Site}/ig, obj.site.name);
             row = row.replace(/{Typology}/ig, obj.typology.name);
             row = row.replace(/{Time}/ig, obj.estimatedInterventionTime);
-
-            let selectIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#select-modal" onclick="controller.doSelect=true">'+
-                '        Select </button>';
-            row = row.replace(/{Select}/ig, selectIcon);
 
             $('#table-rows').append(row);
         });
@@ -113,11 +102,13 @@ class ActivitySelectionController {
 
     /**
      * Open select Modal, download Json data and render.
+     * @param id - the id of the selected row
      */
-    viewSelect() {
+    viewSelect(id) {
+
         let controller = this
         controller.addMaterialsChoices();
-        $.get(controller.viewEndPoint, {id: controller.selectedRowID}, function (data) {
+        $.get(controller.viewEndPoint, {id: id}, function (data) {
             let activity;
             activity = data.id  + " - " + data.site.name + " - " + data.typology.name + " - " + data.estimatedInterventionTime +"'";
             $('#select-id').val(data.id);
@@ -134,7 +125,7 @@ class ActivitySelectionController {
 
             $('#select-description').val(data.description);
 
-            if (data.workspace.id != 0) {
+            if (data.workspace.id !== "0") {
                 $('#select-notes').val(data.workspace.description);
             }
 
@@ -159,8 +150,6 @@ class ActivitySelectionController {
         });
         // Charging
     }
-
-
 
     /**
      * Adds a checkbox for each element of the Json data
@@ -206,11 +195,12 @@ class ActivitySelectionController {
      */
     forward(){
         let controller = this;
+        let id = $('#select-id').val();
         $.post(this.editEndPoint, $('#select-form').serialize(), function(data){
 
         }).done(function(){
-            let data = "?activity-id=" + controller.selectedRowID + "&type=" + controller.type;
-            window.location.replace('MaintainerAssignment.html' + data)
+            let data = "?activity-id=" + id + "&type=" + controller.type;
+            window.location.replace('MaintainerAssignmentPlannedActivities.html' + data)
         });
 
     }
@@ -231,32 +221,5 @@ class ActivitySelectionController {
             $('#week-selection').append(row);
         }
     }
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if (controller.doSelect === true) {
-            controller.doSelect = false;
-            controller.viewSelect();
-        }
-
-    };
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
-    };
-
 
 }
