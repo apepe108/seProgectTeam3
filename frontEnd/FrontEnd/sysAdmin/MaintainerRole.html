@@ -88,8 +88,16 @@
                     <td>{ID}</td>
                     <td>{Name}</td>
                     <td>{Description}</td>
-                    <td class="myIcon">{Edit}</td>
-                    <td class="myIcon">{Delete}</td>
+                    <td class="myIcon">
+                        <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                data-target="#edit-modal" onclick="controller.viewEdit({ID})">
+                            <i class="fas fa-edit mr-2"></i>
+                        </button>
+                    </td>
+                    <td class="myIcon"><button class="btn btn-outline-danger btn-sm"  data-toggle="modal"
+                        data-target="#delete-modal" onclick="controller.deleteView({ID})">
+                        <i class="fas fa-trash mr-2"></i>
+                                </button></td>
                 </tr>
             </template>
             <tbody id="table-rows"></tbody>
@@ -245,9 +253,6 @@
     $(document).ready(function () {
         controller.fillTable();
     });
-
-    // Listener on click on table
-    $("#table tbody").on("click", "tr", null, controller.handleClickOnRow);
 
 </script>
 

@@ -113,7 +113,9 @@
                         <td class="myFont">{Site}</td>
                         <td class="myFont">{Typology}</td>
                         <td class="myFont">{Time}</td>
-                        <td class="myIcon">{Select}</td>
+                        <td class="myIcon"><button class="btn btn-outline-primary btn-sm"  data-toggle="modal"
+                                            data-target="#select-modal" onclick="controller.viewSelect({ID})">
+                                    Select </button></td>
                     </tr>
                 </template>
                 <tbody id="table-rows"></tbody>
@@ -252,10 +254,6 @@
     $(document).ready(function () {
         controller.addWeekChoices();
     });
-
-
-    // Listener on click on table
-    $("#table tbody").on("click", "tr", null, controller.handleClickOnRow);
 
 </script>
 

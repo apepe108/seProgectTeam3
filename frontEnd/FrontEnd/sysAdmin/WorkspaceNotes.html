@@ -52,24 +52,24 @@
 </header>
 
 <div>
-<!-- Banner Alert template and his section -->
-<template id="success-alert-template">
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <h4>{message}</h4>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-</template>
-<template id="fail-alert-template">
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <h4>{message}</h4>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-</template>
-<div id="response-alert-section" class="container message"></div>
+    <!-- Banner Alert template and his section -->
+    <template id="success-alert-template">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <h4>{message}</h4>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </template>
+    <template id="fail-alert-template">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h4>{message}</h4>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </template>
+    <div id="response-alert-section" class="container message"></div>
 </div>
 <section class="container">
     <div class="row">
@@ -86,8 +86,18 @@
                     <td>{ID}</td>
                     <td>{Description}</td>
                     <td>{Sites}</td>
-                    <td class="myIcon">{Edit}</td>
-                    <td class="myIcon">{Delete}</td>
+                    <td class="myIcon">
+                        <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                data-target="#edit-modal" onclick="controller.viewEdit({ID})">
+                            <i class="fas fa-edit mr-2"></i>
+                        </button>
+                    </td>
+                    <td class="myIcon">
+                        <button class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                data-target="#delete-modal" onclick="controller.deleteView({ID})">
+                            <i class="fas fa-trash mr-2"></i>
+                        </button>
+                    </td>
                 </tr>
             </template>
             <tbody id="table-rows"></tbody>
@@ -266,8 +276,6 @@
         controller.fillTable();
     });
 
-    // Listener on click on table
-    $("#table tbody").on("click", "tr", controller.handleClickOnRow);
 
 </script>
 

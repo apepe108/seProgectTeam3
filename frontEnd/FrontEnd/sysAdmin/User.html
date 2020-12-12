@@ -84,13 +84,19 @@
             </thead>
             <template id="table-template">
                 <tr>
-                    <td>{Id}</td>
+                    <td>{ID}</td>
                     <td>{Name}</td>
                     <td>{Role}</td>
                     <td>{EMail}</td>
                     <td class="pw">{Password}</td>
-                    <td class="myIcon">{Edit}</td>
-                    <td class="myIcon">{Delete}</td>
+                    <td class="myIcon"><button class="btn btn-outline-primary btn-sm"  data-toggle="modal"
+                                       data-target="#edit-modal" onclick="controller.viewEdit({ID})">
+                        <i class="fas fa-edit mr-2"></i>
+                                </button></td>
+                    <td class="myIcon"><button class="btn btn-outline-danger btn-sm"  data-toggle="modal"
+                                       data-target="#delete-modal" onclick="controller.deleteView({ID})">
+                        <i class="fas fa-trash mr-2"></i>
+                                </button></td>
                 </tr>
             </template>
             <tbody id="table-rows"></tbody>
@@ -126,13 +132,13 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="insert-name">Name:</label>
-                            <input class="form-control"id="insert-name" type="text" name="name"
+                            <input class="form-control" id="insert-name" type="text" name="name"
                                    placeholder="Insert name..." value="" required autocomplete="off">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="insert-role">Role:</label>
                             <select class="form-control" name="role" id="insert-role" required>
-                                <option name="role" value="empty">Choose the role to assign...</option>
+                                <option name="role" value="">Choose the role to assign...</option>
                                 <option name="role" value="sysadmin">System Administrator</option>
                                 <option name="role" value="planner">Planner</option>
                                 <option name="role" value="maintainer">Maintainer</option>
@@ -191,7 +197,7 @@
                         <div class="form-group col-md-6">
                             <label for="edit-role">Role:</label>
                             <select class="form-control" name="role" id="edit-role" required>
-                                <option name="role" value="empty">Choose the role to assign...</option>
+                                <option name="role" value="">Choose the role to assign...</option>
                                 <option name="role" value="sysadmin">System Administrator</option>
                                 <option name="role" value="planner">Planner</option>
                                 <option name="role" value="maintainer">Maintainer</option>
@@ -272,9 +278,6 @@
     $(document).ready(function () {
         controller.fillTable();
     });
-
-    // Listener on click on table
-    $("#table tbody").on("click", "tr", null, controller.handleClickOnRow);
 
 </script>
 

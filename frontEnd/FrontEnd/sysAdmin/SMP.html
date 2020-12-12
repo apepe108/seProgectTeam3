@@ -85,7 +85,12 @@
                     <td>{ID}</td>
                     <td>{Name}</td>
                     <td style="width:10px">{SMP}</td>
-                    <td class="myIcon">{Edit}</td>
+                    <td class="myIcon">
+                        <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                data-target="#new-smp-modal" onclick="controller.viewEdit({ID})">
+                            <i class="fas fa-edit mr-2"></i>
+                        </button>
+                    </td>
                 </tr>
             </template>
             <tbody id="table-rows"></tbody>
@@ -116,13 +121,15 @@
                     </div>
                     <input type="hidden" id="procedure-id" name="id" value="">
 
-                    <input type="file" name="file" accept="application/pdf, application/vnd.cups-pdf, application/vnd.sealedmedia.softseal.pdf" required>
+                    <input type="file" name="file"
+                           accept="application/pdf, application/vnd.cups-pdf, application/vnd.sealedmedia.softseal.pdf"
+                           required>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit" value="Submit" class="btn btn-primary" data-dismiss="modal"
-                            onclick="controller.edit()">
+                           onclick="controller.edit()">
                 </div>
             </form>
         </div>

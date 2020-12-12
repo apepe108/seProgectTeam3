@@ -15,12 +15,6 @@ class EWOSelectionController {
         this.materialsEndPoint = endPoint + "/material"
         this.competencesViewEndpoint = endPoint + "/competencies"
 
-        this.selectedRowID = -1;
-        this.doSelect = false;
-    }
-
-    setSelectedRowID(id) {
-        this.selectedRowID = id;
     }
 
     /**
@@ -41,14 +35,13 @@ class EWOSelectionController {
             return;
         }
         /* Call the microservice and evaluate data and result status */
-        $.getJSON(this.viewEndPoint, {day:day, week: week, year: year, type: type}, function (data) {
+        $.getJSON(this.viewEndPoint, {day: day, week: week, year: year, type: type}, function (data) {
             controller.renderGUI(data);
         }).done(function () {
             // controller.renderAlert('Data charged successfully.', true);
         }).fail(function () {
             controller.renderAlert('Error while charging data. Retry in a few second.', false);
         });
-        // Caricamento
     }
 
     /**
@@ -70,11 +63,6 @@ class EWOSelectionController {
             row = row.replace(/{ID}/ig, obj.id);
             row = row.replace(/{Site}/ig, obj.site.name);
             row = row.replace(/{Typology}/ig, obj.typology.name);
-
-            let selectIcon = '<button class="btn btn-outline-primary btn-sm"  data-toggle="modal"\n' +
-                '                data-target="#select-modal" onclick="controller.doSelect=true">' +
-                '        Select </button>';
-            row = row.replace(/{Select}/ig, selectIcon);
 
             $('#table-rows').append(row);
         });
@@ -113,14 +101,15 @@ class EWOSelectionController {
 
     /**
      * Open Select Modal, download Json data and render.
+     * @param id - the id of the selected row
      */
-    viewSelect() {
+    viewSelect(id) {
         let controller = this
 
         controller.addMaterialsChoices();
         controller.addCompetencesChoices();
-        $.get(controller.viewEndPoint, {id: controller.selectedRowID}, function (data) {
-            let activity = "";
+        $.get(controller.viewEndPoint, {id: id}, function (data) {
+            let activity;
             activity = data.id + " - " + data.site.name + " - " + data.typology.name;
             $('#select-id').val(data.id);
             $('#select-type').val(controller.type);
@@ -141,7 +130,7 @@ class EWOSelectionController {
 
             $('#select-description').val(data.description);
 
-            if (data.workspace.id != 0) {
+            if (data.workspace.id !== "0") {
                 $('#select-notes').val(data.workspace.description);
             }
             controller.markMaterialsAlreadyPossessed(data.materials);
@@ -217,11 +206,12 @@ class EWOSelectionController {
      */
     forward() {
         let controller = this;
+        let id = $('#select-id').val();
         $.post(this.editEndPoint, $('#select-form').serialize(), function (data) {
 
         }).done(function () {
-            let data = "?activity-id=" + controller.selectedRowID + "&type=" + controller.type;
-            window.location.replace('MaintainerAssignment.html' + data);
+            let data = "?activity-id=" + id + "&type=" + controller.type;
+            window.location.replace('MaintainerAssignmentEWO.html' + data);
         });
 
     }
@@ -261,31 +251,6 @@ class EWOSelectionController {
             default:
                 return "";
         }
-    }
-
-    /**
-     * Function method for handle click on
-     */
-    handleClickOnRow() {
-        // set new selected id
-        controller.setSelectedRowID($(this).find("td:first").html());
-
-        // set highlights row
-        $('.selected').removeClass('selected');
-        $(this).addClass("selected");
-
-        if (controller.doSelect === true) {
-            controller.doSelect = false;
-            controller.viewSelect();
-        }
-    }
-
-    /**
-     * Function used when no one row have to be selected (e.g., when a role is successfully created or edited).
-     */
-    unselect() {
-        $('.selected').removeClass('selected');
-        controller.setSelectedRowID(-1);
     }
 
 }

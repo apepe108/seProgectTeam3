@@ -87,7 +87,12 @@
                     <td>{Name}</td>
                     <td>{Description}</td>
                     <td>{Competences}</td>
-                    <td class="myIcon">{Edit}</td>
+                    <td class="myIcon">
+                        <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                data-target="#edit-modal" onclick="controller.viewEdit({ID})">
+                            <i class="fas fa-edit mr-2"></i>
+                        </button>
+                    </td>
                 </tr>
             </template>
             <tbody id="table-rows"></tbody>
@@ -99,7 +104,6 @@
 <footer class="container">Copyright &copy Group 3, 2020</footer>
 
 <!-- MODAL --------------------->
-
 
 <!-- Popup per la modifica -->
 <div class="modal fade" id="edit-modal" tabindex="-1">
@@ -128,14 +132,13 @@
                     <div class="form-group col-md-12">
                         <table id="table-competence" class="list-group">
                             <thead>
-                                <template id="competence-template">
-                                    <tr>
-                                        <td>{Competence}</td>
-                                    </tr>
-                                </template>
+                            <template id="competence-template">
+                                <tr>
+                                    <td>{Competence}</td>
+                                </tr>
+                            </template>
                             </thead>
                             <tbody id="competence-rows" class="list-group-item input-group">
-                                <!--input type='checkbox' class='checkbox' name='id-competence' value='-1' checked hidden-->
                             </tbody>
                         </table>
                     </div>
@@ -177,8 +180,6 @@
         controller.fillTable();
     });
 
-    // Listener on click on table
-    $("#table tbody").on("click", "tr", controller.handleClickOnRow);
 
 </script>
 
