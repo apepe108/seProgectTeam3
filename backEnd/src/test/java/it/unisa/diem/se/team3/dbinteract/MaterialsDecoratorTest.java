@@ -1,6 +1,7 @@
 package it.unisa.diem.se.team3.dbinteract;
 
 import it.unisa.diem.se.team3.dbinteract.MaterialsDecorator;
+import it.unisa.diem.se.team3.models.MaintainerRole;
 import it.unisa.diem.se.team3.models.Materials;
 import it.unisa.diem.se.team3.servlet.ServletUtil;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MaterialsDecoratorTest {
     private MaterialsDecorator db;
@@ -23,7 +25,9 @@ class MaterialsDecoratorTest {
         db = new MaterialsDecorator(ServletUtil.connectDb());
         db.connect();
 
-        String populateQuery = "INSERT INTO materials (id, name, description)  " +
+        String populateQuery = "DELETE FROM materials CASCADE;" +
+                "ALTER SEQUENCE materials_id RESTART WITH 4;"+
+                "INSERT INTO materials (id, name, description)  " +
                 "VALUES (1, 'Material 1', 'Description material 1'); " +
                 "INSERT INTO materials (id, name, description)  " +
                 "VALUES (2, 'Material 2', 'Description material 2'); " +

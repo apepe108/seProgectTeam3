@@ -1,12 +1,15 @@
 package it.unisa.diem.se.team3.servlet;
 
 import it.unisa.diem.se.team3.dbinteract.MaterialsDecorator;
+import it.unisa.diem.se.team3.models.JsonUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.*;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,7 +21,7 @@ class MaterialsServletTest {
 
     @BeforeAll
     static void beforeAll() throws Exception {
-        tester = new ServletTester(MaterialsServlet.class, new String[]{"/material"});
+        tester = new ServletTester(MaterialsServlet.class, new String[]{"/material", "/edit-material", "/delete-material", "/create-material"});
         tester.startServer();
     }
 
@@ -33,7 +36,9 @@ class MaterialsServletTest {
         db = new MaterialsDecorator(ServletUtil.connectDb());
         db.connect();
 
-        String populateQuery = "INSERT INTO materials (id, name, description)  " +
+        String populateQuery = "DELETE FROM materials CASCADE;" +
+                "ALTER SEQUENCE materials_id RESTART WITH 4; " +
+                "INSERT INTO materials (id, name, description)  " +
                 "VALUES (1, 'Material 1', 'Description material 1'); " +
                 "INSERT INTO materials (id, name, description)  " +
                 "VALUES (2, 'Material 2', 'Description material 2'); " +
@@ -47,7 +52,8 @@ class MaterialsServletTest {
 
     @AfterEach
     void tearDown() {
-        String deleteQuery = "DELETE FROM materials CASCADE; ";
+        String deleteQuery = "DELETE FROM materials CASCADE; " +
+                "ALTER SEQUENCE materials_id RESTART WITH 1;";
         try (Statement stmt = db.getConn().createStatement()){
             stmt.execute(deleteQuery);
         } catch (SQLException e) {

@@ -143,6 +143,52 @@ public class ActivityDecorator extends DbDecorator {
     }
 
     /**
+     * This method displays a list of Activity elements, which represent data from the activity and related tables,
+     * based on the week and year of activity chosen.
+     *
+     * @param week: the week for which the activity is planned.
+     * @param day:  the day of the week which the activity is planned.
+     * @param year: the year for which the activity is planned.
+     * @param type: 'p' to view the scheduled tasks, 'e' to view the ewo tasks.
+     * @return a list of Activity or null if an error occur.
+     */
+    public ArrayList<Activity> getActivity(long year, long week, long day, char type) {
+        ArrayList<Activity> result = new ArrayList<>();
+        try (PreparedStatement stmt = getConn().prepareStatement(
+                "SELECT a.id, a.year, a.week, a.day, a.interruptibility, a.estimated_intervention_time, a.description, mp.id AS procedure_id, mp.name AS procedure_name, mp.smp AS procedure_smp, mt.id AS typology_id, mt.name AS typology_name, mt.description AS typology_description, s.site_id, s.factory_name, s.area_name, s.workspace_id, s.workspace_description \n" +
+                        "FROM activity AS a LEFT JOIN maintenance_typologies AS mt ON a.maintenance_typologies = mt.id LEFT JOIN maintenance_procedures AS mp ON a.maintenance_procedures = mp.id LEFT JOIN site_view AS s ON a.site = s.site_id \n" +
+                        "WHERE a.year = ? AND a.week = ? AND a.day = ? AND a.type = ? AND a.id NOT IN (SELECT activity FROM assigned_activity) ORDER BY a.id;"
+        )) {
+            stmt.setLong(1, year);
+            stmt.setLong(2, week);
+            stmt.setLong(3, day);
+            stmt.setString(4, String.valueOf(type));
+            try (ResultSet rs = stmt.executeQuery()) {
+                long prevActivityId = 0;
+                while (rs.next()) {
+                    long activityId = rs.getLong("id");
+                    result.add(new Activity(activityId, rs.getInt("year"), rs.getShort("week"),
+                            rs.getShort("day"), rs.getBoolean("interruptibility"),
+                            rs.getInt("estimated_intervention_time"), rs.getString("description"),
+                            rs.getLong("typology_id"), rs.getString("typology_name"),
+                            rs.getString("typology_description"), rs.getLong("site_id"),
+                            rs.getString("factory_name") + "-" + rs.getString("area_name"),
+                            rs.getLong("procedure_id"), rs.getString("procedure_name"),
+                            rs.getLong("procedure_smp"), rs.getLong("workspace_id"),
+                            rs.getString("workspace_description")));
+                    getMaterialNeeded(activityId, result.get(result.size() - 1));
+                    getSkillNeeded(activityId, result.get(result.size() - 1));
+                }
+            } catch (SQLException e) {
+                return null;
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+        return result;
+    }
+
+    /**
      * Get material needed for a selected activity, by his id.
      */
     private void getMaterialNeeded(long activityId, Activity result) throws SQLException {
@@ -421,6 +467,77 @@ public class ActivityDecorator extends DbDecorator {
                     stm.execute();
                 }
             }
+        }
+    }
+
+    /**
+     * Method for assign an activity, passing the needed info.
+     *
+     * @param activityId:   the activity to assign.
+     * @param maintainerId: the maintainer to assign at activity.
+     * @param day:          the day of the week assigned for the activity.
+     * @param slotIds:      the slot ids for make the activity.
+     * @param minutes:      the minutes scheduled for each slot ids.
+     * @return true if the activity is assigned correctly, else false.
+     */
+    public boolean assignActivity(long activityId, long maintainerId, int day, long[] slotIds, int[] minutes) {
+        int actualTime = IntStream.of(minutes).sum();
+        int realTime = getActivityTime(activityId);
+
+        if (actualTime != realTime || slotIds.length != minutes.length) {
+            return false;
+        }
+
+        try (PreparedStatement stmt = getConn().prepareStatement(
+                "UPDATE activity SET day = ? WHERE id = ?; " +
+                        "INSERT INTO assigned_activity (activity, maintainer) VALUES (?, ?);"
+        )) {
+            stmt.setInt(1, day);
+            stmt.setLong(2, activityId);
+            stmt.setLong(3, activityId);
+            stmt.setLong(4, maintainerId);
+            stmt.execute();
+            for (int i = 0; i < slotIds.length; i++) {
+                assignSlot(slotIds[i], activityId, minutes[i]);
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param activityId: the activity's id of which he wants to see the estimated time.
+     * @return the estimated time.
+     */
+    private int getActivityTime(long activityId) {
+        try (PreparedStatement stmt = getConn().prepareStatement(
+                "SELECT estimated_intervention_time FROM activity WHERE id = ?;"
+        )) {
+            stmt.setLong(1, activityId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    return 0;
+                }
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Assign slot
+     */
+    private void assignSlot(long slotId, long activityId, int minutes) throws SQLException {
+        try (PreparedStatement stm = getConn().prepareStatement(
+                "INSERT INTO assigned_slot (daily_time_slot, assigned_activity, minutes) VALUES (?, ?, ?);"
+        )) {
+            stm.setLong(1, slotId);
+            stm.setLong(2, activityId);
+            stm.setInt(3, minutes);
+            stm.execute();
         }
     }
 }

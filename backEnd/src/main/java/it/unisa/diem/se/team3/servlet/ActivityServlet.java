@@ -93,6 +93,8 @@ public class ActivityServlet extends HttpServlet {
         if (id != null) {
             // Return single role by id
             renderOne(res, Long.parseLong(id));
+        } else if (type != null && week != null && day != null && year != null) {
+            renderAll(res, Long.parseLong(week), Integer.parseInt(day), Long.parseLong(year), type.charAt(0));
         } else if (type != null && week != null && year != null) {
             renderAll(res, Long.parseLong(week), Long.parseLong(year), type.charAt(0));
         } else if (type != null) {
@@ -150,6 +152,7 @@ public class ActivityServlet extends HttpServlet {
      * @param res:  the HttpServletResponse to return the response to.
      * @param year: the year for which the activity is planned.
      * @param week: the week for which the activity is planned.
+     * @param type: the id of the requested object.
      * @throws IOException if a communication error occurs with the client.
      */
     private void renderAll(HttpServletResponse res, long week, long year, char type) throws IOException {
@@ -163,6 +166,29 @@ public class ActivityServlet extends HttpServlet {
             // Request generated an error, send error
             res.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
 
+        }
+    }
+
+    /**
+     * Returns the list of requested objects in JSON format to the client.
+     *
+     * @param res:  the HttpServletResponse to return the response to.
+     * @param year: the year for which the activity is planned.
+     * @param week: the week for which the activity is planned.
+     * @param day:  the day of thr week (1-7) which the activity is planned.
+     * @param type: the id of the requested object.
+     * @throws IOException if a communication error occurs with the client.
+     */
+    private void renderAll(HttpServletResponse res, long week, long day, long year, char type) throws IOException {
+        List<Activity> activityByDay = db.getActivity(year, week, day, type);
+        if (activityByDay != null) {
+            // No error, send Json
+            res.setContentType("application/json");
+            res.getWriter().print(JsonUtil.toJson(activityByDay));
+            res.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            // Request generated an error, send error
+            res.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
         }
     }
 
@@ -232,8 +258,9 @@ public class ActivityServlet extends HttpServlet {
                     (day != null && !"".equals(day) ? Integer.parseInt(day) : 0),
                     type.charAt(0), Boolean.parseBoolean(interruptibility),
                     (time != null && !"".equals(time) ? Integer.parseInt(time) : 0),
-                    description, Long.parseLong(typologyId), Long.parseLong(procedureId), Long.parseLong(siteId),
-                    ServletUtil.getIdsArray(longMaterials), workspaceDescription, ServletUtil.getIdsArray(competencesIds))) {
+                    description, Long.parseLong(typologyId), (procedureId != null ? Long.parseLong(procedureId) : 0),
+                    Long.parseLong(siteId), ServletUtil.getIdsArray(longMaterials), workspaceDescription,
+                    ServletUtil.getIdsArray(competencesIds))) {
                 // edit success
                 res.setStatus(HttpServletResponse.SC_OK);
             } else {

@@ -1,7 +1,9 @@
 package it.unisa.diem.se.team3.dbinteract;
 
 import it.unisa.diem.se.team3.models.Materials;
+import org.jetbrains.annotations.NotNull;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,7 +31,7 @@ public class MaterialsDecorator extends DbDecorator{
     public ArrayList<Materials> getMaterials() {
         ArrayList<Materials> result = new ArrayList<>();
         try (Statement stmt = getConn().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM materials;")){
+            ResultSet rs = stmt.executeQuery("SELECT * FROM materials ORDER BY id;")){
             while (rs.next()) {
                 result.add(new Materials(rs.getLong("id"), rs.getString("name"),
                         rs.getString("description")));

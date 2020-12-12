@@ -199,6 +199,42 @@ class ActivityDecoratorTest {
     }
 
     @Test
+    void getActivityByDayNoExisting() {
+        // Actual
+        List<Activity> actual = db.getActivity(2020, 21, 7, 'e');
+
+        // Expected
+        ArrayList<Activity> expected = new ArrayList<>();
+
+        // Match
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getActivityByDay() {
+        db.editActivity(1, 2020, 21, 3, 'p', true, 30, "Activity 1 description.", 1, 1, 1, new long[]{1,2,3}, "Description workspace notes 1", new long[] {});
+        // Actual
+        List<Activity> actual = db.getActivity(2020, 21, 3, 'p');
+
+        // Expected
+        ArrayList<Activity> expected = new ArrayList<>();
+        Activity a = new Activity(1, 2020, 21, 3, true, 30,
+                "Activity 1 description.", 1, "Typologies 1",
+                "Description typologies 1", 1, "Factory Site 1-Area 1", 1,
+                "Procedure 1", 0, 1, "Description workspace notes 1");
+        a.addMaterial(1, "Material 1", "Description Material 1.");
+        a.addMaterial(2, "Material 2", "Description Material 2.");
+        a.addMaterial(3, "Material 3", "Description Material 3.");
+        a.addCompetence(1, "Skill 1", "Description skill 1.");
+        a.addCompetence(3, "Skill 3", "Description skill 3.");
+        a.addCompetence(4, "Skill 4", "Description skill 4.");
+        expected.add(a);
+
+        // Match
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void getActivityByNotExistingId() {
         // Actual
         Activity actual = db.getActivity(7);
@@ -287,5 +323,32 @@ class ActivityDecoratorTest {
         expected.add(a4);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void assignActivity() throws InterruptedException {
+        assertTrue(db.assignActivity(2, 1, 1, new long[]{1, 2}, new int[]{60, 30}));
+        Activity actual = db.getActivity(2);
+
+        Activity expected = new Activity(2, 2020, 21, 1, true, 90,
+                "Activity 2 description.", 2, "Typologies 2",
+                "Description typologies 2", 2, "Factory Site 1-Area 2", 1,
+                "Procedure 1", 0, 0, null);
+        expected.addCompetence(1, "Skill 1", "Description skill 1.");
+        expected.addCompetence(3, "Skill 3", "Description skill 3.");
+        expected.addCompetence(4, "Skill 4", "Description skill 4.");
+        expected.addCompetence(5, "Skill 5", "Description skill 5.");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void assignActivityNoTime() {
+        assertFalse(db.assignActivity(2, 1, 2, new long[]{1, 2}, new int[]{60, 20})); ;
+    }
+
+    @Test
+    void assignActivityNoExisting() {
+        assertFalse(db.assignActivity(9, 1, 2, new long[]{1, 2}, new int[]{60, 20})); ;
     }
 }
