@@ -173,6 +173,32 @@ class ActivityServletTest {
     }
 
     @Test
+    void doGetByDay() throws IOException {
+        db.editActivity(1, 2020, 21, 3, 'e', true, 30, "Activity 1 description.", 1, 1, 1, new long[]{1, 2, 3}, "Description workspace notes 1", new long[]{});
+
+        // TRY GET
+        HttpURLConnection http = (HttpURLConnection) new URL("http://localhost:8080/activity?year=2020&week=21&day=3&type=ewo").openConnection();
+        http.connect();
+
+        assertEquals(HttpStatus.OK_200, http.getResponseCode());
+
+        String expected = "[{\"id\":\"1\",\"year\":\"2020\",\"week\":\"21\",\"day\":\"3\",\"site\":{\"id\":\"1\",\"name\":\"Factory Site 1-Area 1\"},\"typology\":{\"id\":\"1\",\"name\":\"Typologies 1\",\"description\":\"Description typologies 1\"},\"description\":\"Activity 1 description.\",\"estimatedInterventionTime\":\"30\",\"interruptibility\":\"true\",\"materials\":[{\"id\":\"1\",\"name\":\"Material 1\",\"description\":\"Description Material 1.\"},{\"id\":\"2\",\"name\":\"Material 2\",\"description\":\"Description Material 2.\"},{\"id\":\"3\",\"name\":\"Material 3\",\"description\":\"Description Material 3.\"}],\"maintenanceProcedures\":{\"id\":\"1\",\"name\":\"Procedure 1\",\"smp\":\"0\"},\"workspace\":{\"id\":\"1\",\"description\":\"Description workspace notes 1\",\"site\":[]},\"skill\":[{\"id\":\"1\",\"name\":\"Skill 1\",\"description\":\"Description skill 1.\"},{\"id\":\"3\",\"name\":\"Skill 3\",\"description\":\"Description skill 3.\"},{\"id\":\"4\",\"name\":\"Skill 4\",\"description\":\"Description skill 4.\"}]}]";
+        assertEquals(expected, tester.readPage(http));
+    }
+
+    @Test
+    void doGetByDayEmpty() throws IOException {
+        // TRY GET
+        HttpURLConnection http = (HttpURLConnection) new URL("http://localhost:8080/activity?year=2020&week=24&day=6&type=ewo").openConnection();
+        http.connect();
+
+        assertEquals(HttpStatus.OK_200, http.getResponseCode());
+
+        String expected = "[]";
+        assertEquals(expected, tester.readPage(http));
+    }
+
+    @Test
     void doGetOneNotExists() throws IOException {
         // TRY GET
         HttpURLConnection http = (HttpURLConnection) new URL("http://localhost:8080/activity?id=8").openConnection();

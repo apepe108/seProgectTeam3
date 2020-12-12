@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "MaterialsServlet", urlPatterns = {"/material"})
+@WebServlet(name = "MaterialsServlet", urlPatterns = {"/material", "/edit-material", "/delete-material", "/create-material"})
 public class MaterialsServlet extends HttpServlet {
     private MaterialsDecorator db;
 
@@ -29,7 +29,12 @@ public class MaterialsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        renderAll(response);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String path = ServletUtil.getRequestPath(request);
+        // Get material
+        if ("/material".equals(path)) {
+            renderAll(response);
+        }
         response.flushBuffer();
     }
 
@@ -46,7 +51,6 @@ public class MaterialsServlet extends HttpServlet {
         // Get competencies
         List<Materials> materials = db.getMaterials();
         if(materials != null) {
-
             // If no error occur send json
             res.getWriter().print(JsonUtil.toJson(materials));
             res.setStatus(HttpServletResponse.SC_OK);
