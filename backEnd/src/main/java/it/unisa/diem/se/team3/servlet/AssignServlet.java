@@ -1,8 +1,6 @@
 package it.unisa.diem.se.team3.servlet;
 
 import it.unisa.diem.se.team3.dbinteract.ActivityDecorator;
-import it.unisa.diem.se.team3.dbinteract.UserDecorator;
-import it.unisa.diem.se.team3.models.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,11 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.stream.Stream;
+
 
 @WebServlet(name = "AssignServlet", urlPatterns = {"/assign"})
 public class AssignServlet extends HttpServlet {
