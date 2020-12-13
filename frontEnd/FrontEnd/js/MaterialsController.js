@@ -1,15 +1,18 @@
-class MaintainerRoleController {
+class MaterialsController {
+
     /**
      * Constructor
      *
      * @param endPoint
      */
     constructor(endPoint) {
-        this.viewEndPoint = endPoint + "/maintainer-role";
-        this.createEndPoint = endPoint + "/create-maintainer-role";
-        this.editEndPoint = endPoint + "/edit-maintainer-role";
-        this.deleteEndPoint = endPoint + "/delete-maintainer-role";
+        this.viewEndPoint = endPoint + "/material";
+        this.createEndPoint = endPoint + "/create-material";
+        this.editEndPoint = endPoint + "/edit-material";
+        this.deleteEndPoint = endPoint + "/delete-material";
+
     }
+
 
     /**
      * Fetch JSON data from the service, then call a function for rendering the View
@@ -27,7 +30,7 @@ class MaintainerRoleController {
         }).fail(function () {
             controller.renderAlert('Error while charging data. Retry in a few second.', false);
         });
-
+        // Caricamento
     }
 
     /**
@@ -36,7 +39,6 @@ class MaintainerRoleController {
      * @param data a JSON representation of data
      */
     renderGUI(data) {
-
         // If table not empty
         $('#table td').remove();
 
@@ -47,9 +49,8 @@ class MaintainerRoleController {
         $.each(data, function (index, obj) {
             let row = staticHtml;
             row = row.replace(/{ID}/ig, obj.id);
-            row = row.replace(/{Name}/ig, obj.name);
+            row = row.replace(/{Name}/ig, obj.name)
             row = row.replace(/{Description}/ig, obj.description);
-
             $('#table-rows').append(row);
         });
 
@@ -76,7 +77,7 @@ class MaintainerRoleController {
         } else {
             alert = $('#fail-alert-template');
         }
-        const html = alert.html().replace(/{message}/ig, message);
+        const html = alert.html().replace(/{message}/ig, message)
         // Add banner and remove it after 5 seconds.
         $(html).prependTo('#response-alert-section')
             .delay(5000)
@@ -86,19 +87,21 @@ class MaintainerRoleController {
     };
 
     /**
-     * Open Model, download Json data and render
-     * @param id the id of the row to edit.
+     * Open Model, download Json data and render.
+     *
+     * @param id the id of the row to edit
      */
     viewEdit(id) {
-        $.get(this.viewEndPoint, {id: id}, function (data) {
+        $.getJSON(this.viewEndPoint, {id: id}, function (data) {
             $('#edit-id').val(data.id);
             $('#edit-name').val(data.name);
             $('#edit-description').val(data.description);
         }).done(function () {
             $('#edit-modal').modal('show');
-        });
-        // Charging
+        })
+
     }
+
 
     /**
      * Send edit request and show result alert.
@@ -106,7 +109,7 @@ class MaintainerRoleController {
     edit() {
         let controller = this;
         if (validate('#edit-form') === false) {
-            controller.renderAlert('Error: The input fields cannot be left empty. Edit rejected', false);
+            controller.renderAlert('Error: The input fields cannot be left empty. Edit rejected', false)
             return;
         }
         let data = $('#edit-form').serialize();
@@ -114,11 +117,8 @@ class MaintainerRoleController {
             // waiting
         }).done(function () {
             // show alert
-            controller.renderAlert('Role edited entered.', true);
+            controller.renderAlert('Material edited successfully.', true);
             // success
-            $('#edit-id').val('');
-            $('#edit-name').val('');
-            $('#edit-description').val('');
             controller.fillTable();
         }).fail(function () {
             controller.renderAlert('Error while editing. Try again.', false);
@@ -132,10 +132,10 @@ class MaintainerRoleController {
     deleteView(id) {
         $.get(this.viewEndPoint, {id: id}, function (data) {
             $('#delete-id').val(data.id);
-            $('#delete-name').html(data.name);
         }).done(function () {
-            $('#delete-modal').modal('show');
+            $('#delete-modal').modal('show')
         });
+        // Charging
     }
 
     /**
@@ -148,10 +148,10 @@ class MaintainerRoleController {
             // waiting
         }).done(function () {
             // show alert
-            controller.renderAlert('Role successfully deleted.', true);
+            controller.renderAlert('Material successfully deleted.', true);
             // charge new data.
             controller.fillTable();
-            controller.unselect();
+
         }).fail(function () {
             controller.renderAlert('Error while deleting. Try again.', false);
         });
@@ -164,24 +164,25 @@ class MaintainerRoleController {
         let controller = this;
 
         if (validate('#insert-form') === false) {
-            controller.renderAlert('Error: Not all fields have been entered correctly. Please try again', false);
+            controller.renderAlert('Error: Not all fields have been entered correctly. Please try again', false)
             return;
         }
+
         let data = $('#insert-form').serialize();
+
         $.post(this.createEndPoint, data, function () { // waiting for response-
 
         }).done(function () { // success response-
             // Set success alert.
-            controller.renderAlert('Role successfully entered.', true);
+            controller.renderAlert('Material successfully entered.', true);
             // Reset modal form.
-            $('#add-name').val('');
-            $('#add-description').val('');
+            $('#insert-description').val('');
+            $('#insert-name').val('');
             // charge new data.
             controller.fillTable();
         }).fail(function () { // fail response
             controller.renderAlert('Error while inserting. Try again.', false);
         });
+        $('insert-form').modal('hide')
     }
 }
-
-
