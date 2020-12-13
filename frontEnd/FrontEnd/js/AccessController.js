@@ -84,10 +84,10 @@ class AccessController {
             .queue(function () {
                 $(this).remove();
             });
-    };
+    }
 
     /**
-     *
+     * Function that converts the JSON data to csv
      */
     toCsv() {
         const controller = this
@@ -103,6 +103,10 @@ class AccessController {
         });
     }
 
+    /**
+     * Function that downloads the csv data
+     * @param toSave - the csv data
+     */
     download_csv(toSave) {
         var hiddenElement = document.createElement('a');
 
