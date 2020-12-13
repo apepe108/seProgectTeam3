@@ -12,3 +12,4 @@ SOURCE OF SPRINT ONE RELASE IS V1.0.
 - v1.02: planned activity view by week and selection page added
 - v1.03: ewo activity view by day and selection page added
 - v1.04: planned activity and ewo maintainer assignment page added and bug fixed
+- v1.05: materials page added 
