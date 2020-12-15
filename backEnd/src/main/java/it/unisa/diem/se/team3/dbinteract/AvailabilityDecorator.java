@@ -299,7 +299,7 @@ public class AvailabilityDecorator extends DbDecorator {
                         "\tWHERE A.year = (SELECT year FROM activity WHERE id = ?) -- id activity\n" +
                         "\t\tAND A.week = (SELECT week FROM activity WHERE id = ?) -- id activity\n" +
                         "\tGROUP BY M.internal_id, A.day\n" +
-                        ") AS a JOIN \n" +
+                        ") AS a LEFT JOIN \n" +
                         "(\n" +
                         "\t-- View competencies compliance by activity, selected by id.\n" +
                         "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had, (\n" +
@@ -393,7 +393,7 @@ public class AvailabilityDecorator extends DbDecorator {
                         "\tWHERE A.year = (SELECT year FROM activity WHERE id = ?) -- id activity\n" +
                         "\t\tAND A.week = (SELECT week FROM activity WHERE id = ?) -- id activity\n" +
                         "\tGROUP BY M.internal_id, A.day\n" +
-                        ") AS a JOIN \n" +
+                        ") AS a LEFT JOIN \n" +
                         "(\n" +
                         "\t-- View competencies compliance by activity, selected by id.\n" +
                         "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had, (\n" +

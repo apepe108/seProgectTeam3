@@ -27,7 +27,9 @@ class UserDecoratorTest {
                 "INSERT INTO users (internal_id, email, password) VALUES (1, 'user1@email.com', 'password1'); " +
                 "INSERT INTO users (internal_id, email, password) VALUES (2, 'user2@email.com', 'password2'); " +
                 "INSERT INTO planner (internal_id, name, email) VALUES (1, 'UserName1', 'user1@email.com'); " +
-                "INSERT INTO maintainer (internal_id, name, email) VALUES (2, 'UserName2', 'user2@email.com');";
+                "INSERT INTO maintainer (internal_id, name, email) VALUES (2, 'UserName2', 'user2@email.com');" +
+                "INSERT INTO maintainer_role (id, name, description) " +
+                "VALUES (1, 'Role 1', 'Description role 1.'), (2, 'Role 2', 'Description role 2.'), (3, 'Role 3', 'Description role 3.'); ";
         try (Statement stmt = db.getConn().createStatement()){
             stmt.execute(populateQuery);
         } catch (SQLException e) {
@@ -40,6 +42,8 @@ class UserDecoratorTest {
         String deleteQuery = "ALTER SEQUENCE user_id RESTART WITH 1;" +
                 "DELETE FROM users CASCADE; " +
                 "DELETE FROM planner CASCADE; " +
+                "DELETE FROM is_a CASCADE; " +
+                "DELETE FROM maintainer_role CASCADE; " +
                 "DELETE FROM maintainer CASCADE;";
         try (Statement stmt = db.getConn().createStatement()){
             stmt.execute(deleteQuery);
@@ -106,14 +110,15 @@ class UserDecoratorTest {
 
     @Test
     void addUsers() {
-        assertTrue(db.addUsers("Username3", "user3@email.com", "password3", "maintainer"));
-        assertTrue(db.addUsers("Username4", "user4@email.com", "password4", "planner"));
+        assertTrue(db.addUsers("Username3", "user3@email.com", "password3", "maintainer", new long[]{1}));
+        assertTrue(db.addUsers("Username4", "user4@email.com", "password4", "planner", new long[]{1}));
         List<User> actual = db.getUsers();
 
         ArrayList<User> expected = new ArrayList<>();
         expected.add(new User(1, "UserName1", "user1@email.com", "password1", "Planner"));
         expected.add(new User(2, "UserName2", "user2@email.com", "password2", "Maintainer"));
-        expected.add(new User(3, "UserName3", "user3@email.com", "password3", "Maintainer"));
+        expected.add(new User(3, "Username3", "user3@email.com", "password3", "Maintainer"));
+        expected.get(2).addRoles(1, "Role 1", "Description role 1.");
         expected.add(new User(4, "Username4", "user4@email.com", "password4", "Planner"));
 
         assertEquals(expected, actual);
@@ -121,13 +126,15 @@ class UserDecoratorTest {
 
     @Test
     void editUsers() {
-        assertTrue(db.editUser(2, "New Username2", "new2@email.com", "newpassword2", "maintainer"));
-        assertTrue(db.editUser(1, "New Username1", "new1@email.com", "newpassword1", "maintainer"));
+        assertTrue(db.editUser(2, "New Username2", "new2@email.com", "newpassword2", new long[]{1, 2}));
+        assertTrue(db.editUser(1, "New Username1", "new1@email.com", "newpassword1", new long[0]));
         List<User> actual = db.getUsers();
 
         ArrayList<User> expected = new ArrayList<>();
-        expected.add(new User(1, "New Username1", "new1@email.com", "newpassword1", "Maintainer"));
+        expected.add(new User(1, "New Username1", "new1@email.com", "newpassword1", "Planner"));
         expected.add(new User(2, "New Username2", "new2@email.com", "newpassword2", "Maintainer"));
+        expected.get(1).addRoles(1, "Role 1", "Description role 1.");
+        expected.get(1).addRoles(2, "Role 2", "Description role 2.");
 
         assertEquals(expected, actual);
     }

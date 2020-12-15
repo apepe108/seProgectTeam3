@@ -72,15 +72,13 @@ public class MaintenanceProcedureDecorator extends DbDecorator {
      */
     public boolean associateSmp(long procedureId, InputStream file) {
         try (PreparedStatement stmt = getConn().prepareStatement(
-                "UPDATE maintenance_procedures SET smp = null WHERE id = ?;" +
-                        "DELETE FROM smp WHERE id IN (SELECT id FROM maintenance_procedures AS m WHERE m.id = ?); " +
+                        "DELETE FROM smp WHERE id IN (SELECT smp FROM maintenance_procedures AS m WHERE m.id = ?); " +
                         "INSERT INTO smp (id, pdf_file) VALUES (nextval('smp_id'), ?); " +
                         "UPDATE maintenance_procedures SET smp = currval('smp_id') WHERE id = ?;"
         )) {
             stmt.setLong(1, procedureId);
-            stmt.setLong(2, procedureId);
-            stmt.setBinaryStream(3, file);
-            stmt.setLong(4, procedureId);
+            stmt.setBinaryStream(2, file);
+            stmt.setLong(3, procedureId);
             stmt.execute();
             return true;
         } catch (SQLException e) {

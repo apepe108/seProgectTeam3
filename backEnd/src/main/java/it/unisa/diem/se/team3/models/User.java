@@ -1,5 +1,7 @@
 package it.unisa.diem.se.team3.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,6 +13,7 @@ public class User implements Model {
     private final String email;
     private final String password;
     private final String role;
+    private List<MaintainerRole> roles;
 
     /**
      * @param id:       the id of the user.
@@ -25,6 +28,18 @@ public class User implements Model {
         this.email = email;
         this.password = password;
         this.role = role;
+        roles = new ArrayList<>();
+    }
+
+    /**
+     * Add maintainer role at the user.
+     *
+     * @param id:          the id of the role.
+     * @param name:        the name of the role.
+     * @param description: the description of the role.
+     */
+    public void addRoles(long id, String name, String description) {
+        roles.add(new MaintainerRole(id, name, description));
     }
 
     @Override
@@ -37,9 +52,11 @@ public class User implements Model {
         }
         User user = (User) o;
         return id == user.id &&
+                Objects.equals(name, user.name) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(role, user.role);
+                Objects.equals(role, user.role) &&
+                Objects.equals(roles, user.roles);
     }
 
     /**
@@ -53,7 +70,8 @@ public class User implements Model {
                 "\"name\":\"" + name + "\"," +
                 "\"email\":\"" + email + "\"," +
                 "\"password\":\"" + password + "\"," +
-                "\"role\":\"" + role + "\"}";
+                "\"role\":\"" + role + "\"," +
+                "\"roles\":" + JsonUtil.toJson(roles) + "}";
     }
 
     /**

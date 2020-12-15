@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet(name = "UserServlet", urlPatterns = {"/user", "/edit-user", "/create-user", "/delete-user"})
@@ -119,9 +120,9 @@ public class UserServlet extends HttpServlet {
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        String role = req.getParameter("role");
-        if (id != null && name!= null && email !=null && password != null && role != null) {
-            if (db.editUser(Long.parseLong(id), name , email , password , role)) {
+        String[] roleIds = req.getParameterValues("role-ids");
+        if (id != null && name != null && email != null && password != null) {
+            if (db.editUser(Long.parseLong(id), name, email, password, ServletUtil.getIdsArray(roleIds))) {
                 // edit success
                 res.setStatus(HttpServletResponse.SC_OK);
             } else {
@@ -167,8 +168,9 @@ public class UserServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String role = req.getParameter("role");
+        String[] roleIds = req.getParameterValues("role-ids");
         if (name != null && email != null && password != null && role != null) {
-            if (db.addUsers(name, email, password, role)) {
+            if (db.addUsers(name, email, password, role, ServletUtil.getIdsArray(roleIds))) {
                 // add success
                 res.setStatus(HttpServletResponse.SC_OK);
             } else {
