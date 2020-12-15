@@ -184,6 +184,9 @@ class MaintainerAssignmentEWOController {
             $('#send-button').prop('disabled', true);
             $('#undo-button').prop('disabled', false);
 
+            if(controller.slotID.includes(slot)){
+                return;
+            }
 
             if (controller.timeToAssign > minAvailable) {
 
