@@ -200,10 +200,10 @@ class MaintainerAssignmentPlannedActivitiesController {
         let header = $("#daily-header-template").html();
         let slotsHeader = "";
         let slotsData = "";
-        this.timeToAssign = this.activityTime;
-        $('#timeRequired').val(this.activityTime);
+        controller.timeToAssign = controller.activityTime;
+        $('#timeRequired').val(controller.activityTime);
 
-        $.getJSON(this.viewDailyEndPoint, data, function (data) {
+        $.getJSON(controller.viewDailyEndPoint, data, function (data) {
             $('#daily-label').text('AVAILABILITY ' + data.name);
 
             /* Bind obj data to the template, then append to table body */
@@ -260,6 +260,9 @@ class MaintainerAssignmentPlannedActivitiesController {
             $('#send-button').prop('disabled', true);
             $('#undo-button').prop('disabled', false);
 
+            if(controllerPlanned.slotID.includes(slot)){
+                return;
+            }
 
             if (controllerPlanned.timeToAssign > minAvailable) {
                 controllerPlanned.slotID.push(slot);
@@ -350,7 +353,7 @@ class MaintainerAssignmentPlannedActivitiesController {
 
         }).done(function () {
             alert("Activity Assigned Correctely");
-            controller.back();
+            controllerPlanned.back();
         })
     }
 
