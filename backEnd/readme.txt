@@ -18,3 +18,4 @@ SOURCE OF SPRINT ONE RELASE IS V1.0.
 - v1.03: availability function added, assign function added, carious bug addedd.
 - v1.04: material edit function addedd,
 - v1.05: mail sending addedd.
+- v1.06: several bug on smp and availability solved.
