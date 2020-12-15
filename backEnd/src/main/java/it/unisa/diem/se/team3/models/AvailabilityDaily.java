@@ -55,10 +55,6 @@ public class AvailabilityDaily implements Model {
                     + "\"minutes\":\"" + minutes + "\"}";
         }
 
-        @Override
-        public String toString() {
-            return toJSON();
-        }
     }
 
     private final long id;
@@ -117,10 +113,5 @@ public class AvailabilityDaily implements Model {
                 + "\"name\":\"" + name + "\","
                 + "\"competence_compliance\":\"" + competenceCompliance + "\","
                 + "\"availability\":" + JsonUtil.toJson(slots) + "}";
-    }
-
-    @Override
-    public String toString() {
-        return toJSON();
     }
 }

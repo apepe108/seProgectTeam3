@@ -52,7 +52,10 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        renderAll(response);
+        String path = ServletUtil.getRequestPath(request);
+        if ("/access-record".equals(path)) {
+            renderAll(response);
+        }
         response.flushBuffer();
     }
 

@@ -129,9 +129,4 @@ public class Activity implements Model {
                 + "\"workspace\":" + workspace.toJSON() + ","
                 + "\"skill\":" + JsonUtil.toJson(competencies) + "}";
     }
-
-    @Override
-    public String toString() {
-        return toJSON();
-    }
 }
