@@ -40,7 +40,9 @@ public class UserServletTest {
                 "INSERT INTO users (internal_id, email, password) VALUES (1, 'user1@email.com', 'password1'); " +
                 "INSERT INTO users (internal_id, email, password) VALUES (2, 'user2@email.com', 'password2'); " +
                 "INSERT INTO planner (internal_id, name, email) VALUES (1, 'UserName1', 'user1@email.com'); " +
-                "INSERT INTO maintainer (internal_id, name, email) VALUES (2, 'UserName2', 'user2@email.com');";
+                "INSERT INTO maintainer (internal_id, name, email) VALUES (2, 'UserName2', 'user2@email.com');" +
+                "INSERT INTO maintainer_role (id, name, description) " +
+                "VALUES (1, 'Role 1', 'Description role 1.'), (2, 'Role 2', 'Description role 2.'), (3, 'Role 3', 'Description role 3.'); ";
         try (Statement stmt = db.getConn().createStatement()){
             stmt.execute(populateQuery);
         } catch (SQLException e) {
@@ -53,6 +55,8 @@ public class UserServletTest {
         String deleteQuery = "ALTER SEQUENCE user_id RESTART WITH 1;" +
                 "DELETE FROM users CASCADE; " +
                 "DELETE FROM planner CASCADE; " +
+                "DELETE FROM is_a CASCADE; " +
+                "DELETE FROM maintainer_role CASCADE; " +
                 "DELETE FROM maintainer CASCADE;";
         try (Statement stmt = db.getConn().createStatement()){
             stmt.execute(deleteQuery);
@@ -71,8 +75,8 @@ public class UserServletTest {
 
         assertEquals(HttpStatus.OK_200, http.getResponseCode());
 
-        String expected = "[{\"id\":\"1\",\"name\":\"UserName1\",\"email\":\"user1@email.com\",\"password\":\"password1\",\"role\":\"Planner\"}," +
-                "{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\"}]";
+        String expected = "[{\"id\":\"1\",\"name\":\"UserName1\",\"email\":\"user1@email.com\",\"password\":\"password1\",\"role\":\"Planner\",\"roles\":[]}," +
+                "{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\",\"roles\":[]}]";
         assertEquals(expected, tester.readPage(http));
     }
 
@@ -84,7 +88,7 @@ public class UserServletTest {
 
         assertEquals(HttpStatus.OK_200, http.getResponseCode());
 
-        String expected = "{\"id\":\"1\",\"name\":\"UserName1\",\"email\":\"user1@email.com\",\"password\":\"password1\",\"role\":\"Planner\"}";
+        String expected = "{\"id\":\"1\",\"name\":\"UserName1\",\"email\":\"user1@email.com\",\"password\":\"password1\",\"role\":\"Planner\",\"roles\":[]}";
         assertEquals(expected, tester.readPage(http));
     }
 
@@ -106,7 +110,7 @@ public class UserServletTest {
         assertEquals(HttpStatus.OK_200, http.getResponseCode());
 
         // Verify correct delete
-        String expected = "[{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\"}]";
+        String expected = "[{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\",\"roles\":[]}]";
         assertEquals(expected, JsonUtil.toJson(db.getUsers()));
     }
 
@@ -138,9 +142,9 @@ public class UserServletTest {
         assertEquals(HttpStatus.OK_200, http.getResponseCode());
 
         // Verify correct insert
-        String expected = "[{\"id\":\"1\",\"name\":\"UserName1\",\"email\":\"user1@email.com\",\"password\":\"password1\",\"role\":\"Planner\"}," +
-                "{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\"}," +
-                "{\"id\":\"3\",\"name\":\"New user\",\"email\":\"newuser@email.com\",\"password\":\"new password\",\"role\":\"Planner\"}]";
+        String expected = "[{\"id\":\"1\",\"name\":\"UserName1\",\"email\":\"user1@email.com\",\"password\":\"password1\",\"role\":\"Planner\",\"roles\":[]}," +
+                "{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\",\"roles\":[]}," +
+                "{\"id\":\"3\",\"name\":\"New user\",\"email\":\"newuser@email.com\",\"password\":\"new password\",\"role\":\"Planner\",\"roles\":[]}]";
         assertEquals(expected, JsonUtil.toJson(db.getUsers()));
     }
 
@@ -166,7 +170,7 @@ public class UserServletTest {
     @Test
     void doPostEdit() throws IOException {
         // TRY POST
-        String urlParameters = "id=1&name=New user1&email=newemail1@email.com&password=new password1&role=planner";
+        String urlParameters = "id=1&name=New user1&email=newemail1@email.com&password=new password1&role-ids=1&role-ids=2";
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
         int postDataLength = postData.length;
         String request = "http://localhost:8080/edit-user";
@@ -182,8 +186,8 @@ public class UserServletTest {
         assertEquals(HttpStatus.OK_200, http.getResponseCode());
 
         // Verify correct insert
-        String expected = "[{\"id\":\"1\",\"name\":\"New user1\",\"email\":\"newemail1@email.com\",\"password\":\"new password1\",\"role\":\"Planner\"}," +
-                "{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\"}]";
+        String expected = "[{\"id\":\"1\",\"name\":\"New user1\",\"email\":\"newemail1@email.com\",\"password\":\"new password1\",\"role\":\"Planner\",\"roles\":[]}," +
+                "{\"id\":\"2\",\"name\":\"UserName2\",\"email\":\"user2@email.com\",\"password\":\"password2\",\"role\":\"Maintainer\",\"roles\":[]}]";
         assertEquals(expected, JsonUtil.toJson(db.getUsers()));
     }
 

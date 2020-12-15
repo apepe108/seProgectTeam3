@@ -20,7 +20,7 @@ class UserTest {
     @Test
     void toJSON() {
         // Make expected
-        String expected = "{\"id\":\"1\",\"name\":\"name\",\"email\":\"user1@email.com\",\"password\":\"mySecretPassword1\",\"role\":\"planner\"}";
+        String expected = "{\"id\":\"1\",\"name\":\"name\",\"email\":\"user1@email.com\",\"password\":\"mySecretPassword1\",\"role\":\"planner\",\"roles\":[]}";
 
         // Make actual
         User u = new User(1, "name", "user1@email.com", "mySecretPassword1", "planner");

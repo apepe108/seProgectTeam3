@@ -106,8 +106,8 @@ public class MaintenanceProcedureServlet extends HttpServlet {
     private void create(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         String id = req.getParameter("id");
         Part filePart = req.getPart("file");
-        System.out.println(id + " " + filePart);
         if (id != null && filePart != null) {
+
             // String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
             InputStream fileContent = filePart.getInputStream();
             if (db.associateSmp(Long.parseLong(id), fileContent)) {
