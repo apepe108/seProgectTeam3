@@ -52,7 +52,9 @@ class AccessRecordDecoratorTest {
 
         // Expected
         ArrayList<AccessRecord> expected = new ArrayList<>();
-        expected.add(new AccessRecord("tizio@email.com", "tizio", "SysAdmin", LocalDateTime.of(2021,12,13,12,45,05), LocalDateTime.of(2021, 12, 13, 15, 40, 44)));
+        expected.add(new AccessRecord("tizio@email.com", "tizio", "SysAdmin",
+                LocalDateTime.of(2021,12,13,12,45,5),
+                LocalDateTime.of(2021, 12, 13, 15, 40, 44)));
 
         // Match
         assertEquals(expected, actual);

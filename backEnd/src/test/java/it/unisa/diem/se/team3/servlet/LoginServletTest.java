@@ -183,7 +183,9 @@ class LoginServletTest {
         // Test GET
         HttpURLConnection http = (HttpURLConnection)new URL("http://localhost:8080/access-record").openConnection();
         http.connect();
+
         assertEquals(HttpStatus.OK_200, http.getResponseCode());
-        assertEquals("[{\"email\":\"tizio@email.com\",\"name\":\"tizio\",\"role\":\"SysAdmin\",\"login_date\":\"13-12-2021 12:45:05\",\"logout_date\":\"13-12-2021 15:40:44\"}]", tester.readPage(http));
+        assertEquals("[{\"email\":\"tizio@email.com\",\"name\":\"tizio\",\"role\":\"SysAdmin\"," +
+                "\"login_date\":\"13-12-2021 12:45:05\",\"logout_date\":\"13-12-2021 15:40:44\"}]", tester.readPage(http));
     }
 }

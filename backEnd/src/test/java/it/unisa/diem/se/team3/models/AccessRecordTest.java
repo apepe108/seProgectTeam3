@@ -22,10 +22,13 @@ class AccessRecordTest {
     @Test
     void toJSON() {
         // Make expected
-        String expected = "{\"email\":\"tizio@email.com\",\"name\":\"tizio\",\"role\":\"SysAdmin\",\"login_date\":\"13-12-2021 12:45:05\",\"logout_date\":\"13-12-2021 15:40:44\"}";
+        String expected = "{\"email\":\"tizio@email.com\",\"name\":\"tizio\",\"role\":\"SysAdmin\",\"login_date\":" +
+                "\"13-12-2021 12:45:05\",\"logout_date\":\"13-12-2021 15:40:44\"}";
 
         // Make actual
-        AccessRecord c = new AccessRecord("tizio@email.com", "tizio", "SysAdmin", LocalDateTime.of(2021,12,13,12,45,05), LocalDateTime.of(2021, 12, 13, 15, 40, 44));
+        AccessRecord c = new AccessRecord("tizio@email.com", "tizio", "SysAdmin",
+                LocalDateTime.of(2021, 12, 13, 12, 45, 5),
+                LocalDateTime.of(2021, 12, 13, 15, 40, 44));
         String actual = c.toJSON();
 
         // Test

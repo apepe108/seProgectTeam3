@@ -49,11 +49,6 @@ public class AvailabilityWeekly implements Model {
             return "{" + "\"day\":\"" + day + "\","
                     + "\"percentage\":\"" + percentage + "\"}";
         }
-
-        @Override
-        public String toString() {
-            return toJSON();
-        }
     }
 
     private final long id;
@@ -111,10 +106,5 @@ public class AvailabilityWeekly implements Model {
                 + "\"name\":\"" + name + "\","
                 + "\"competence_compliance\":\"" + competenceCompliance + "\","
                 + "\"availability\":" + JsonUtil.toJson(days) + "}";
-    }
-
-    @Override
-    public String toString() {
-        return toJSON();
     }
 }

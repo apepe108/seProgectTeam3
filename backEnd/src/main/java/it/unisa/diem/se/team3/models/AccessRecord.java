@@ -41,11 +41,6 @@ public class AccessRecord implements Model {
                 Objects.equals(logout_date, that.logout_date);
     }
 
-    @Override
-    public int hashCode() {
-        return 0;
-    }
-
     /**
      * Method that derives, given the current object, its representation in JSON string.
      *
@@ -60,12 +55,4 @@ public class AccessRecord implements Model {
                 "\"login_date\":\"" + login_date.format(formatter) + "\"," +
                 "\"logout_date\":\"" + (logout_date != null ? logout_date.format(formatter) : "null" ) + "\"" + "}";
     }
-
-    @Override
-    public String toString(){
-        String s= toJSON();
-        return s;
-    }
-
-
 }
