@@ -32,7 +32,24 @@ public class AvailabilityDecorator extends DbDecorator {
         ArrayList<AvailabilityDaily> result = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         try (PreparedStatement stmt = getConn().prepareStatement(
-                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, CC.required_skill, A.id_slot, A.hour_start, A.hour_end, A.remaining_time\n" +
+                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, (\n" +
+                        "\t\tSELECT COUNT(skills.id)\n" +
+                        "\t\tFROM\n" +
+                        "\t\t(\n" +
+                        "\t\t\tSELECT C2.id\n" +
+                        "\t\t\tFROM activity AS a1 \n" +
+                        "\t\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
+                        "\t\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
+                        "\t\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
+                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\t\tUNION\n" +
+                        "\t\t\tSELECT C2.id\n" +
+                        "\t\t\tFROM activity AS a1 \n" +
+                        "\t\t\tLEFT JOIN require_ewo AS re1 ON A1.id = RE1.activity\n" +
+                        "\t\t\tLEFT JOIN competences AS c2 ON RE1.competences = C2.id\n" +
+                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\t) AS skills\n" +
+                        "\t) AS required_skill, A.id_slot, A.hour_start, A.hour_end, A.remaining_time\n" +
                         "FROM\n" +
                         "(\n" +
                         "\t-- View, for each maintainer and for a selected day, every timeslot and the related remaining time \n" +
@@ -67,24 +84,7 @@ public class AvailabilityDecorator extends DbDecorator {
                         ") AS a LEFT JOIN \n" +
                         "(\n" +
                         "\t-- View competencies compliance by activity, selected by id.\n" +
-                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had, (\n" +
-                        "\t\tSELECT COUNT(skills.id)\n" +
-                        "\t\tFROM\n" +
-                        "\t\t(\n" +
-                        "\t\t\tSELECT C2.id\n" +
-                        "\t\t\tFROM activity AS a1 \n" +
-                        "\t\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
-                        "\t\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
-                        "\t\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
-                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
-                        "\t\t\tUNION\n" +
-                        "\t\t\tSELECT C2.id\n" +
-                        "\t\t\tFROM activity AS a1 \n" +
-                        "\t\t\tLEFT JOIN require_ewo AS re1 ON A1.id = RE1.activity\n" +
-                        "\t\t\tLEFT JOIN competences AS c2 ON RE1.competences = C2.id\n" +
-                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
-                        "\t\t) AS skills\n" +
-                        "\t) AS required_skill\n" +
+                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had\n" +
                         "\tFROM maintainer AS m \n" +
                         "\t\tLEFT JOIN is_a AS ia ON M.internal_id = IA.maintainer\n" +
                         "\t\tLEFT JOIN maintainer_role AS mr ON IA.maintainer_role = MR.id\n" +
@@ -92,17 +92,17 @@ public class AvailabilityDecorator extends DbDecorator {
                         "\t\tLEFT JOIN competences AS c1 ON HS.competences = C1.id\n" +
                         "\tWHERE C1.id IN (\n" +
                         "\t\tSELECT C2.id \n" +
-                        "\t\tFROM activity AS a1 \n" +
-                        "\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
-                        "\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
-                        "\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
-                        "\t\tWHERE a1.id = ?  -- id activity\n" +
+                        "\t\tFROM activity AS a2 \n" +
+                        "\t\tLEFT JOIN maintenance_procedures AS mp2 ON A2.maintenance_procedures = MP2.id\n" +
+                        "\t\tLEFT JOIN require AS r2 ON MP2.id = R2.maintenance_procedures\n" +
+                        "\t\tLEFT JOIN competences AS c2 ON R2.competences = C2.id\n" +
+                        "\t\tWHERE a2.id = ?  -- id activity\n" +
                         "\t\tUNION\n" +
                         "\t\tSELECT C2.id\n" +
-                        "\t\tFROM activity AS a1 \n" +
-                        "\t\tLEFT JOIN require_ewo AS re1 ON A1.id = RE1.activity\n" +
-                        "\t\tLEFT JOIN competences AS c2 ON RE1.competences = C2.id\n" +
-                        "\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\tFROM activity AS a2 \n" +
+                        "\t\tLEFT JOIN require_ewo AS re2 ON A2.id = RE2.activity\n" +
+                        "\t\tLEFT JOIN competences AS c2 ON RE2.competences = C2.id\n" +
+                        "\t\tWHERE a2.id = ?  -- Id activity\n" +
                         "\t) OR C1.id IS null\n" +
                         "\tGROUP BY M.internal_id\n" +
                         ") AS cc ON a.maintainer_id = cc.maintainer_id\n" +
@@ -110,12 +110,12 @@ public class AvailabilityDecorator extends DbDecorator {
         )) {
             stmt.setLong(1, activityId);
             stmt.setLong(2, activityId);
-            stmt.setLong(3, day);
+            stmt.setLong(3, activityId);
             stmt.setLong(4, activityId);
-            stmt.setLong(5, activityId);
-            stmt.setLong(6, day);
+            stmt.setLong(5, day);
+            stmt.setLong(6, activityId);
             stmt.setLong(7, activityId);
-            stmt.setLong(8, activityId);
+            stmt.setLong(8, day);
             stmt.setLong(9, activityId);
             stmt.setLong(10, activityId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -154,7 +154,24 @@ public class AvailabilityDecorator extends DbDecorator {
         AvailabilityDaily result;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         try (PreparedStatement stmt = getConn().prepareStatement(
-                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, CC.required_skill, A.id_slot, A.hour_start, A.hour_end, A.remaining_time\n" +
+                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, (\n" +
+                        "\t\tSELECT COUNT(skills.id)\n" +
+                        "\t\tFROM\n" +
+                        "\t\t(\n" +
+                        "\t\t\tSELECT C2.id\n" +
+                        "\t\t\tFROM activity AS a1 \n" +
+                        "\t\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
+                        "\t\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
+                        "\t\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
+                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\t\tUNION\n" +
+                        "\t\t\tSELECT C2.id\n" +
+                        "\t\t\tFROM activity AS a1 \n" +
+                        "\t\t\tLEFT JOIN require_ewo AS re1 ON A1.id = RE1.activity\n" +
+                        "\t\t\tLEFT JOIN competences AS c2 ON RE1.competences = C2.id\n" +
+                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\t) AS skills\n" +
+                        "\t) AS required_skill, A.id_slot, A.hour_start, A.hour_end, A.remaining_time\n" +
                         "FROM\n" +
                         "(\n" +
                         "\t-- View, for each maintainer and for a selected day, every timeslot and the related remaining time \n" +
@@ -189,24 +206,7 @@ public class AvailabilityDecorator extends DbDecorator {
                         ") AS a LEFT JOIN \n" +
                         "(\n" +
                         "\t-- View competencies compliance by activity, selected by id.\n" +
-                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had, (\n" +
-                        "\t\tSELECT COUNT(skills.id)\n" +
-                        "\t\tFROM\n" +
-                        "\t\t(\n" +
-                        "\t\t\tSELECT C2.id\n" +
-                        "\t\t\tFROM activity AS a1 \n" +
-                        "\t\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
-                        "\t\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
-                        "\t\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
-                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
-                        "\t\t\tUNION\n" +
-                        "\t\t\tSELECT C2.id\n" +
-                        "\t\t\tFROM activity AS a1 \n" +
-                        "\t\t\tLEFT JOIN require_ewo AS re1 ON A1.id = RE1.activity\n" +
-                        "\t\t\tLEFT JOIN competences AS c2 ON RE1.competences = C2.id\n" +
-                        "\t\t\tWHERE a1.id = ?  -- Id activity\n" +
-                        "\t\t) AS skills\n" +
-                        "\t) AS required_skill\n" +
+                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had\n" +
                         "\tFROM maintainer AS m \n" +
                         "\t\tLEFT JOIN is_a AS ia ON M.internal_id = IA.maintainer\n" +
                         "\t\tLEFT JOIN maintainer_role AS mr ON IA.maintainer_role = MR.id\n" +
@@ -214,17 +214,17 @@ public class AvailabilityDecorator extends DbDecorator {
                         "\t\tLEFT JOIN competences AS c1 ON HS.competences = C1.id\n" +
                         "\tWHERE C1.id IN (\n" +
                         "\t\tSELECT C2.id \n" +
-                        "\t\tFROM activity AS a1 \n" +
-                        "\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
-                        "\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
-                        "\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
-                        "\t\tWHERE a1.id = ?  -- id activity\n" +
+                        "\t\tFROM activity AS a2 \n" +
+                        "\t\tLEFT JOIN maintenance_procedures AS mp2 ON A2.maintenance_procedures = MP2.id\n" +
+                        "\t\tLEFT JOIN require AS r2 ON MP2.id = R2.maintenance_procedures\n" +
+                        "\t\tLEFT JOIN competences AS c2 ON R2.competences = C2.id\n" +
+                        "\t\tWHERE a2.id = ?  -- id activity\n" +
                         "\t\tUNION\n" +
                         "\t\tSELECT C2.id\n" +
-                        "\t\tFROM activity AS a1 \n" +
-                        "\t\tLEFT JOIN require_ewo AS re1 ON A1.id = RE1.activity\n" +
-                        "\t\tLEFT JOIN competences AS c2 ON RE1.competences = C2.id\n" +
-                        "\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\tFROM activity AS a2 \n" +
+                        "\t\tLEFT JOIN require_ewo AS re2 ON A2.id = RE2.activity\n" +
+                        "\t\tLEFT JOIN competences AS c2 ON RE2.competences = C2.id\n" +
+                        "\t\tWHERE a2.id = ?  -- Id activity\n" +
                         "\t) OR C1.id IS null\n" +
                         "\tGROUP BY M.internal_id\n" +
                         ") AS cc ON a.maintainer_id = cc.maintainer_id\n" +
@@ -233,12 +233,12 @@ public class AvailabilityDecorator extends DbDecorator {
         )) {
             stmt.setLong(1, activityId);
             stmt.setLong(2, activityId);
-            stmt.setLong(3, day);
+            stmt.setLong(3, activityId);
             stmt.setLong(4, activityId);
-            stmt.setLong(5, activityId);
-            stmt.setLong(6, day);
+            stmt.setLong(5, day);
+            stmt.setLong(6, activityId);
             stmt.setLong(7, activityId);
-            stmt.setLong(8, activityId);
+            stmt.setLong(8, day);
             stmt.setLong(9, activityId);
             stmt.setLong(10, activityId);
             stmt.setLong(11, maintainerId);
@@ -269,7 +269,15 @@ public class AvailabilityDecorator extends DbDecorator {
     public List<AvailabilityWeekly> getAvailabilityWeekly(long activityId) {
         ArrayList<AvailabilityWeekly> result = new ArrayList<>();
         try (PreparedStatement stmt = getConn().prepareStatement(
-                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, CC.required_skill, A.day, A.remaining_percentage\n" +
+                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, (\n" +
+                        "\t\tSELECT COUNT(C2.id)\n" +
+                        "\t\tFROM activity AS a1 \n" +
+                        "\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
+                        "\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
+                        "\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
+                        "\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\tGROUP BY A1.id\n" +
+                        "\t) AS required_skill, A.day, A.remaining_percentage\n" +
                         "FROM (\n" +
                         "\t-- View, for each maintainer and for a selected week, the daily remaining time in percentage\n" +
                         "\tSELECT M.internal_id AS maintainer_id, M.name AS maintainer_name, week.day, 100 AS remaining_percentage\n" +
@@ -302,15 +310,7 @@ public class AvailabilityDecorator extends DbDecorator {
                         ") AS a LEFT JOIN \n" +
                         "(\n" +
                         "\t-- View competencies compliance by activity, selected by id.\n" +
-                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had, (\n" +
-                        "\t\tSELECT COUNT(C2.id)\n" +
-                        "\t\tFROM activity AS a1 \n" +
-                        "\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
-                        "\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
-                        "\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
-                        "\t\tWHERE a1.id = ?  -- Id activity\n" +
-                        "\t\tGROUP BY A1.id\n" +
-                        "\t) AS required_skill\n" +
+                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had\n" +
                         "\tFROM maintainer AS m \n" +
                         "\t\tLEFT JOIN is_a AS ia ON M.internal_id = IA.maintainer\n" +
                         "\t\tLEFT JOIN maintainer_role AS mr ON IA.maintainer_role = MR.id\n" +
@@ -363,7 +363,15 @@ public class AvailabilityDecorator extends DbDecorator {
     public AvailabilityWeekly getAvailabilityWeekly(long activityId, long maintainerId) {
         AvailabilityWeekly result;
         try (PreparedStatement stmt = getConn().prepareStatement(
-                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, CC.required_skill, A.day, A.remaining_percentage\n" +
+                "SELECT A.maintainer_id, A.maintainer_name, CC.skill_had, (\n" +
+                        "\t\tSELECT COUNT(C2.id)\n" +
+                        "\t\tFROM activity AS a1 \n" +
+                        "\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
+                        "\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
+                        "\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
+                        "\t\tWHERE a1.id = ?  -- Id activity\n" +
+                        "\t\tGROUP BY A1.id\n" +
+                        "\t) AS required_skill, A.day, A.remaining_percentage\n" +
                         "FROM (\n" +
                         "\t-- View, for each maintainer and for a selected week, the daily remaining time in percentage\n" +
                         "\tSELECT M.internal_id AS maintainer_id, M.name AS maintainer_name, week.day, 100 AS remaining_percentage\n" +
@@ -396,15 +404,7 @@ public class AvailabilityDecorator extends DbDecorator {
                         ") AS a LEFT JOIN \n" +
                         "(\n" +
                         "\t-- View competencies compliance by activity, selected by id.\n" +
-                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had, (\n" +
-                        "\t\tSELECT COUNT(C2.id)\n" +
-                        "\t\tFROM activity AS a1 \n" +
-                        "\t\tLEFT JOIN maintenance_procedures AS mp1 ON A1.maintenance_procedures = MP1.id\n" +
-                        "\t\tLEFT JOIN require AS r1 ON MP1.id = R1.maintenance_procedures\n" +
-                        "\t\tLEFT JOIN competences AS c2 ON R1.competences = C2.id\n" +
-                        "\t\tWHERE a1.id = ?  -- Id activity\n" +
-                        "\t\tGROUP BY A1.id\n" +
-                        "\t) AS required_skill\n" +
+                        "\tSELECT M.internal_id as maintainer_id, COUNT(C1.id) AS skill_had\n" +
                         "\tFROM maintainer AS m \n" +
                         "\t\tLEFT JOIN is_a AS ia ON M.internal_id = IA.maintainer\n" +
                         "\t\tLEFT JOIN maintainer_role AS mr ON IA.maintainer_role = MR.id\n" +

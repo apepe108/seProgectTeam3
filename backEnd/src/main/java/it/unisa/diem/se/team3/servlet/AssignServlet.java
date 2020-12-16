@@ -55,7 +55,7 @@ public class AssignServlet extends HttpServlet {
                 String modelHtml = readModel(ServletUtil.getProperty("mail.model1"));
                 modelHtml = modelHtml.replace("{user}", u.getName());
                 SendMail s = new SendMail(ServletUtil.getProperty("mail.email"), ServletUtil.getProperty("mail.password"));
-                boolean a = s.send(u.getEmail(), ServletUtil.getProperty("mail.productionmanager"), "New Activity!", modelHtml);
+                s.send(u.getEmail(), ServletUtil.getProperty("mail.productionmanager"), "New Activity!", modelHtml);
                 }).start();
             res.setStatus(HttpServletResponse.SC_CREATED);
         } else {
