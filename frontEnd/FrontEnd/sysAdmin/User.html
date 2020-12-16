@@ -48,7 +48,7 @@
     </div>
 </nav>
 <header class="container">
-    <h1>User manager</h1>
+    <h5>User manager</h5>
 </header>
 
 <!-- Banner Alert template and his section -->
@@ -144,6 +144,7 @@
                                 <option name="role" value="maintainer">Maintainer</option>
                             </select>
                         </div>
+
                     </div>
                     <!-- Email & Password-->
                     <div class="form-row">
@@ -156,6 +157,22 @@
                             <input class="form-control" id="insert-password" type="password" name="password"
                                    placeholder="Insert Password here..." required>
                         </div>
+                    </div>
+
+                    <!-- Maintianer Role-->
+                    <div class="form-group col-md-6 invisible" id="insert-maintainer-div">
+                        <label for="insert-maintainer-role">Maintainer Role:</label>
+                        <table id="insert-maintainer-role">
+                            <thead>
+                            <template id="insert-maintainer-role-template">
+                                <tr>
+                                    <td>{MaintainerRole}</td>
+                                </tr>
+                            </template>
+                            </thead>
+                            <tbody id="insert-maintainer-role-rows">
+                            </tbody>
+                        </table>
                     </div>
                 </form>
             </div>
@@ -196,11 +213,11 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="edit-role">Role:</label>
-                            <select class="form-control" name="role" id="edit-role" required>
-                                <option name="role" value="">Choose the role to assign...</option>
-                                <option name="role" value="sysadmin">System Administrator</option>
-                                <option name="role" value="planner">Planner</option>
-                                <option name="role" value="maintainer">Maintainer</option>
+                            <select class="form-control" id="edit-role" readonly disabled>
+                                <option  value="">Choose the role to assign...</option>
+                                <option  value="sysadmin">System Administrator</option>
+                                <option  value="planner">Planner</option>
+                                <option  value="maintainer">Maintainer</option>
                             </select>
                         </div>
                     </div>
@@ -215,6 +232,27 @@
                             <input class="form-control" id="edit-password" type="password" name="password"
                                    placeholder="edit Password here..." required>
                         </div>
+                    </div>
+
+                    <!-- Maintainer Role-->
+                    <div class="form-group col-md-6" id="edit-maintainer-div">
+                        <label for="edit-maintainer-role">Maintainer Role:</label>
+                        <table id="edit-maintainer-role">
+                            <thead>
+                            <template id="edit-maintainer-role-template">
+                                <tr>
+                                    <td>
+                                        <div class='container d-inline-block'>
+                                          <input type='checkbox' class='checkbox' name='role-ids' value='{id}'>    {Role}
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </template>
+                            </thead>
+                            <tbody id="edit-maintainer-role-rows">
+                            </tbody>
+                        </table>
                     </div>
                 </form>
             </div>
@@ -278,7 +316,6 @@
     $(document).ready(function () {
         controller.fillTable();
     });
-
 </script>
 
 </body>

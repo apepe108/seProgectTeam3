@@ -42,3 +42,21 @@ tr.selected {
 .pw {
   -webkit-text-security: disc;
 }
+
+.WeekAvail:hover{
+	outline: solid 3px #ec652e;
+	transition: outline 0.1s linear;
+}
+
+.WeekAvail {
+	border-width: 0px;
+}
+
+.avail:hover{
+	outline: solid 3px #ec652e;
+	transition: outline 0.1s linear;
+}
+
+.avail {
+	border-width: 0px;
+}

@@ -49,7 +49,7 @@
 </nav>
 
 <header class="container">
-    <h3>EWO Selection Manager</h3>
+    <h5>EWO Selection Manager</h5>
 </header>
 <br>
 <!-- Banner Alert template and his section -->
@@ -211,53 +211,63 @@
                                 </div>
 
                             </div>
+                            <div class="form-group col">
+                                <label>Interruptibility</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="select-interruptibility-true"
+                                           name="interruptibility" value="true" checked>
+                                    <label class="form-check-label" for="select-interruptibility-true">
+                                        True
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="select-interruptibility-false"
+                                           name="interruptibility"
+                                           value="false">
+                                    <label class="form-check-label" for="select-interruptibility-false">False</label><br>
+                                </div>
+                            </div>
 
                         </div>
 
                         <div class="form-group col-md-4 ">
                             <label for="table-competence">Skills Needed</label>
-                            <table id="table-competence" class="list-group">
+                            <table id="table-competence" >
                                 <thead>
                                 <template id="competence-template">
-                                    <tr>
-                                        <td>{Competence}</td>
+                                    <tr class="list-group-item py-1" >
+                                        <td>
+                                            <label>
+                                                <input type='checkbox' class='checkbox' name='skill-id' value={CompetenceId}>
+                                                {CompetenceName}
+                                            </label>
+
+                                        </td>
                                     </tr>
                                 </template>
                                 </thead>
-                                <tbody id="competence-rows" class="list-group-item input-group">
+                                <tbody id="competence-rows">
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     <div class="form-row ">
-                        <div class="form-group col-3">
-                            <label>Interruptibility</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="select-interruptibility-true"
-                                       name="interruptibility" value="true" checked>
-                                <label class="form-check-label" for="select-interruptibility-true">
-                                    True
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="select-interruptibility-false"
-                                       name="interruptibility"
-                                       value="false">
-                                <label class="form-check-label" for="select-interruptibility-false">False</label><br>
-                            </div>
-                        </div>
-                        <div class="col-9">
+                        <div class="col-12">
                             <label for="table-material">Materials</label>
                             <table id="table-material">
                                 <thead>
                                 <template id="material-template">
-                                    <tr>
-                                        <td>{Material}</td>
+                                    <tr class="list-group-item py-1">
+                                        <td>
+                                            <input type='checkbox' class='checkbox' name='materials' value={MaterialId}>
+                                            <strong>{MaterialName}:</strong>
+                                                <p>{MaterialDescription}</p>
+                                        </td>
                                     </tr>
                                 </template>
                                 </thead>
-                                <tbody id="material-rows">
+                                <tbody id="material-rows" >
                                 </tbody>
                             </table>
                         </div>

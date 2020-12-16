@@ -48,7 +48,7 @@
 </nav>
 
 <header class="container">
-    <h1>Activity Manager</h1>
+    <h5>Activity Manager</h5>
 </header>
 
 <!-- Banner Alert template and his section -->
@@ -133,8 +133,8 @@
 
 <!-- Popup per inserimento -->
 <div class="modal fade demo-popup" id="insert-modal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content ">
             <div class="modal-header">
                 <h5 class="modal-title">Create Activity </h5>
                 <button type="button" class="close" aria-label="Close" data-dismiss="modal" onclick="close()">
@@ -218,8 +218,12 @@
                             <table id="insert-table-materials">
                                 <thead>
                                 <template id="insert-table-materials-template">
-                                    <tr>
-                                        <td>{Material}</td>
+                                    <tr class="list-group-item py-1">
+                                        <td>
+                                            <input type='checkbox' class='checkbox' name='materials' value={MaterialId}>
+                                            <strong>{MaterialName}:</strong>
+                                            <p>{MaterialDescription}</p>
+                                        </td>
                                     </tr>
                                 </template>
                                 </thead>
@@ -340,8 +344,12 @@
                             <table id="edit-table-materials">
                                 <thead>
                                 <template id="edit-table-materials-template">
-                                    <tr>
-                                        <td>{Material}</td>
+                                    <tr class="list-group-item py-1">
+                                        <td>
+                                            <input type='checkbox' class='checkbox' name='materials' value={MaterialId}>
+                                            <strong>{MaterialName}:</strong>
+                                            <p>{MaterialDescription}</p>
+                                        </td>
                                     </tr>
                                 </template>
                                 </thead>

@@ -48,7 +48,7 @@
 </nav>
 
 <header class="container">
-    <h1>Ticket Manager</h1>
+    <h5>Ticket Manager</h5>
 </header>
 
 <!-- Banner Alert template and his section -->
@@ -83,10 +83,7 @@
                     <th>Year</th>
                     <th>Site</th>
                     <th>Typology</th>
-                    <th>Description</th>
-                    <th>Ext. Time</th>
                     <th>Int. Allow</th>
-                    <th>Materials</th>
                     <th>Workspace Notes</th>
                 </tr>
                 </thead>
@@ -98,10 +95,7 @@
                         <td class="myFont">{Year}</td>
                         <td class="myFont">{Site}</td>
                         <td class="myFont">{Typology}</td>
-                        <td class="myFont">{Description}</td>
-                        <td class="myFont">{Time}</td>
-                        <td class="myFont">{Interruptibility}</td>
-                        <td class="myFont">{Materials}</td>
+                        <td class="myFont ">{Interruptibility}</td>
                         <td class="myFont">{Notes}</td>
                         <td class="myIcon">
                             <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
@@ -173,7 +167,23 @@
                                    min="2020"
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="mr-sm-2" for="insert-site"> Site: </label>
+                            <select class="custom-select mr-sm-2" type="select" id="insert-site"
+                                    class="col-sm-3 form-control" name="siteId"
+                                    required></select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="mr-sm-2" for="insert-typology"> Typology: </label>
+                            <select class="custom-select mr-sm-2" type="select" id="insert-typology"
+                                    class="col-sm-3 form-control" name="typologyId"
+                                    required></select>
+                        </div>
+                        <div class="form-group col-md-4">
                             <label>Interruptibility</label><br>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" id="insert-interruptibility-true"
@@ -191,50 +201,6 @@
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label class="mr-sm-2" for="insert-site"> Site: </label>
-                            <select class="custom-select mr-sm-2" type="select" id="insert-site"
-                                    class="col-sm-3 form-control" name="siteId"
-                                    required></select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="mr-sm-2" for="insert-typology"> Typology: </label>
-                            <select class="custom-select mr-sm-2" type="select" id="insert-typology"
-                                    class="col-sm-3 form-control" name="typologyId"
-                                    required></select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-9">
-                            <label class="mr-sm-2" for="insert-description"> Description: </label>
-                            <textarea class="form-control" id="insert-description" name="description"
-                                      placeholder="Insert the Description..."></textarea>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="mr-sm-2" class="form-check-input" for="insert-time"> Ext. Intervention
-                                Time: </label>
-                            <input class="form-control text-center" type="text" id="insert-time" name="time">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label class="mr-sm-2" for="insert-table-materials"> Materials: </label>
-                            <table id="insert-table-materials">
-                                <thead>
-                                <template id="insert-table-materials-template">
-                                    <tr>
-                                        <td>{Material}</td>
-                                    </tr>
-                                </template>
-                                </thead>
-                                <tbody id="insert-table-materials-rows">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
 
                     <div class="form-row">
                         <div class="form-group col-md-12">
@@ -302,22 +268,7 @@
                             <input class="form-control text-center" type="number" id="edit-year" name="year" min="2020"
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label>Interruptibility</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="edit-interruptibility-true"
-                                       name="interruptibility" value="true" checked>
-                                <label class="form-check-label" for="edit-interruptibility-true">
-                                    True
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="edit-interruptibility-false"
-                                       name="interruptibility"
-                                       value="false">
-                                <label class="form-check-label" for="edit-interruptibility-false">False</label><br>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="form-row">
@@ -333,35 +284,21 @@
                                     class="col-sm-3 form-control" name="typologyId"
                                     required></select>
                         </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-9">
-                            <label class="mr-sm-2" for="edit-description"> Description: </label>
-                            <textarea class="form-control" id="edit-description" name="description"
-                                      placeholder="edit the Description..."></textarea>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label class="mr-sm-2" class="form-check-input" for="edit-time"> Ext. Intervention
-                                Time: </label>
-                            <input class="form-control text-center" type="text" id="edit-time" name="time">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label class="mr-sm-2" for="edit-table-materials"> Materials: </label>
-                            <table id="edit-table-materials">
-                                <thead>
-                                <template id="edit-table-materials-template">
-                                    <tr>
-                                        <td>{Material}</td>
-                                    </tr>
-                                </template>
-                                </thead>
-                                <tbody id="edit-table-materials-rows">
-                                </tbody>
-                            </table>
+                        <div class="form-group col-md-4">
+                            <label>Interruptibility</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="edit-interruptibility-true"
+                                       name="interruptibility" value="true" checked>
+                                <label class="form-check-label" for="edit-interruptibility-true">
+                                    True
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="edit-interruptibility-false"
+                                       name="interruptibility"
+                                       value="false">
+                                <label class="form-check-label" for="edit-interruptibility-false">False</label><br>
+                            </div>
                         </div>
                     </div>
 
@@ -444,7 +381,7 @@
     $(document).ready(function () {
         controller.fillTable();
     });
-    
+
     // Listener on Site Selection
     $('#insert-site').on('change', function () {
         controller.setRelatedWorkspace(this.value, '#insert')

@@ -20,9 +20,10 @@ class MaintainerRoleController {
         let controller = this;
         /* Call the microservice and evaluate data and result status */
         $.getJSON(this.viewEndPoint, function (data) {
+
             controller.renderGUI(data);
         }).done(function () {
-            // controller.renderAlert('Data charged successfully.', true);
+            //controller.renderAlert('Data charged successfully.', true);
             $('#insert-button').prop('disabled', false);
         }).fail(function () {
             controller.renderAlert('Error while charging data. Retry in a few second.', false);
@@ -36,7 +37,6 @@ class MaintainerRoleController {
      * @param data a JSON representation of data
      */
     renderGUI(data) {
-
         // If table not empty
         $('#table td').remove();
 

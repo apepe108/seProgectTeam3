@@ -119,13 +119,12 @@ class WorkspaceNotesController {
      * @param table the table to render
      */
     addCheckBoxes(data, table) {
-        $(table + ' td').remove();
+        $(table + ' tr').remove();
         let staticHtml = $(table + '-template').html();
         $.each(data, function (index, obj) {
             let elem = staticHtml;
-            elem = elem.replace(/{Site}/ig,
-                "<div class='container d-inline-block'>" +
-                "<input type='checkbox' class='checkbox' name='id-site' value='" + obj.id + "'>" + obj.name + "</div>");
+            elem = elem.replace(/{SiteId}/ig, obj.id);
+            elem = elem.replace(/{SiteName}/ig, obj.name);
             $(table + '-rows').append(elem);
         });
     }

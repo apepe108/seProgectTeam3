@@ -11,6 +11,8 @@ class UserController {
         this.editEndPoint = endPoint + "/edit-user";
         this.deleteEndPoint = endPoint + "/delete-user";
 
+        this.maintainerRolesEndPoint = endPoint + "/maintainer-role";
+
     }
 
 
@@ -39,6 +41,7 @@ class UserController {
      * @param data a JSON representation of data
      */
     renderGUI(data) {
+
         // If table not empty
         $('#table td').remove();
 
@@ -63,7 +66,7 @@ class UserController {
         } else {
             $("tfoot tr:first").fadeOut(100, function () {
                 $("tfoot tr:first").remove();
-            })
+            });
         }
     }
 
@@ -87,25 +90,49 @@ class UserController {
             .queue(function () {
                 $(this).remove();
             });
-    };
+    }
 
     /**
      * Open Model, download Json data and render.
      *  @param id the id of the row to edit
      */
     viewEdit(id) {
+        const controller = this;
+
         $.get(this.viewEndPoint, {id: id}, function (data) {
             $('#edit-id').val(data.id);
             $('#edit-name').val(data.name);
             $('#edit-email').val(data.email);
             $('#edit-password').val(data.password);
-
-            $("#edit-role option").filter(function() {
-                return $(this).text() === (data.role);
+            $("#edit-role option").filter(function () {
+                return $(this).val() === (data.role).toLowerCase();
             }).prop('selected', true);
 
-        }).done(function () {
-            $('#edit-modal').modal('show')
+            if ((data.role).toLowerCase() === 'maintainer') {
+              $('#edit-maintainer-div').show();
+              $('#edit-maintainer-role td').remove();
+
+              $.getJSON(controller.maintainerRolesEndPoint, function (data2) {
+                  const staticHtml = $('#edit-maintainer-role-template').html();
+                  $.each(data2, function (index, obj) {
+                      let elem = staticHtml;
+                      elem = elem.replace(/{id}/ig, obj.id);
+                      elem = elem.replace(/{Role}/ig, obj.name);
+
+                      $('#edit-maintainer-role-rows').append(elem);
+                  });
+              }).done(function () {
+                  controller.markRolesAlreadyPossessed(data.roles);
+              });
+
+            } else {
+                controller.notViewEditMaintainerRole();
+            }
+
+
+        }).done(function (data) {
+
+            $('#edit-modal').modal('show');
         });
         // Charging
     }
@@ -193,7 +220,61 @@ class UserController {
         }).fail(function () { // fail response
             controller.renderAlert('Error while inserting. Try again.', false);
         });
-    };
+    }
 
+    viewEditMaintainerRole() {
+        $('#edit-maintainer-div').show();
+        $('#edit-maintainer-role td').remove();
 
+        $.getJSON(controller.maintainerRolesEndPoint, function (data) {
+            const staticHtml = $('#edit-maintainer-role-template').html();
+            $.each(data, function (index, obj) {
+                let elem = staticHtml;
+                elem = elem.replace(/{id}/ig, obj.name);
+                elem = elem.replace(/{Role}/ig, obj.name);
+
+                $('#edit-maintainer-role-rows').append(elem);
+            });
+        });
+    }
+
+    notViewEditMaintainerRole() {
+        $('#edit-maintainer-div').hide();
+    }
+
+    /**
+     * Marks as checked all the checkboxes of the roles already possessed
+     * @param roles json containing all the roles possessed
+     */
+    markRolesAlreadyPossessed(roles) {
+        $.each(roles, function (index, obj) {
+            let checkboxes = document.getElementsByClassName("checkbox");
+            Array.prototype.filter.call(checkboxes, function (element) {
+                if ($(element).val() === obj.id) {
+                    $(element).prop('checked', 'true');
+                }
+            }, false);
+        });
+    }
 }
+
+$('#insert-role').change(function () {
+    if (this.value === 'maintainer') {
+        $('#insert-maintainer-div').removeClass('invisible');
+        $('#insert-maintainer-role td').remove();
+
+        $.getJSON(controller.maintainerRolesEndPoint, function (data) {
+            const staticHtml = $('#insert-maintainer-role-template').html();
+            $.each(data, function (index, obj) {
+                let elem = staticHtml;
+                elem = elem.replace(/{MaintainerRole}/ig,
+                    "<div class='container d-inline-block'>" +
+                    "<input type='checkbox' class='checkbox' name='role-ids' value='" + obj.id + "'>\t" +
+                    obj.name + "</div>");
+                $('#insert-maintainer-role-rows').append(elem);
+            });
+        });
+    } else {
+        $('#insert-maintainer-div').addClass('invisible');
+    }
+});

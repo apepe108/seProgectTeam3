@@ -47,7 +47,7 @@
     </div>
 </nav>
 <header class="container">
-    <h1>Role Competences manage</h1>
+    <h5>Role Competences manage</h5>
 </header>
 
 <!-- Banner Alert template and its section -->
@@ -133,12 +133,16 @@
                         <table id="table-competence" class="list-group">
                             <thead>
                             <template id="competence-template">
-                                <tr>
-                                    <td>{Competence}</td>
+                                <tr class="list-group-item py-0">
+                                    <td>
+                                        <input type='checkbox' class='checkbox' name='id-competence' value={CompetenceId}>
+                                        <strong>{CompetenceName}:</strong>
+                                        <p>{CompetenceDescription}</p>
+                                    </td>
                                 </tr>
                             </template>
                             </thead>
-                            <tbody id="competence-rows" class="list-group-item input-group">
+                            <tbody id="competence-rows">
                             </tbody>
                         </table>
                     </div>

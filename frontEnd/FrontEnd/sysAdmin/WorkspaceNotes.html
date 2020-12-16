@@ -48,7 +48,7 @@
     </div>
 </nav>
 <header class="container">
-    <h1>Workspace Notes manage</h1>
+    <h5>Workspace Notes manage</h5>
 </header>
 
 <div>
@@ -73,7 +73,7 @@
 </div>
 <section class="container">
     <div class="row">
-        <table class="table table-bordered table-hover " id="table">
+        <table class="table table-bordered table-hover" id="table">
             <thead class="thead-light">
             <tr>
                 <th>ID</th>
@@ -85,7 +85,7 @@
                 <tr>
                     <td>{ID}</td>
                     <td>{Description}</td>
-                    <td>{Sites}</td>
+                    <td class="w-25">{Sites}</td>
                     <td class="myIcon">
                         <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
                                 data-target="#edit-modal" onclick="controller.viewEdit({ID})">
@@ -142,12 +142,17 @@
                         <table id="insert-table-site" class="list-group">
                             <thead>
                             <template id="insert-table-site-template">
-                                <tr>
-                                    <td>{Site}</td>
+                                <tr class="list-group-item py-1">
+                                    <td>
+                                        <label>
+                                            <input type='checkbox' class='checkbox' name='id-site' value={SiteId}>
+                                            {SiteName}
+                                        </label>
+                                    </td>
                                 </tr>
                             </template>
                             </thead>
-                            <tbody id="insert-table-site-rows" class="list-group-item input-group">
+                            <tbody id="insert-table-site-rows">
 
                             </tbody>
                         </table>
@@ -200,12 +205,17 @@
                         <table id="edit-table-site" class="list-group">
                             <thead>
                             <template id="edit-table-site-template">
-                                <tr>
-                                    <td>{Site}</td>
+                                <tr class="list-group-item py-1">
+                                    <td>
+                                        <label>
+                                            <input type='checkbox' class='checkbox' name='id-site' value={SiteId}>
+                                            {SiteName}
+                                        </label>
+                                    </td>
                                 </tr>
                             </template>
                             </thead>
-                            <tbody id="edit-table-site-rows" class="list-group-item input-group">
+                            <tbody id="edit-table-site-rows">
 
                             </tbody>
                         </table>
