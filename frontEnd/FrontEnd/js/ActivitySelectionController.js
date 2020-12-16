@@ -131,7 +131,7 @@ class ActivitySelectionController {
 
             $('#select-skills li').remove();
             $.each(data.skill, function (index, obj) {
-                $('#select-skills').append("<li >"+obj.name+"</li>");
+                $('#select-skills').append("<li class='list-group-item py-0'>"+obj.name+"</li>");
             });
 
             let smpSelector = '#smp-icon';
