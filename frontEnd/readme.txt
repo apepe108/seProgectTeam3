@@ -14,4 +14,5 @@ SOURCE OF SPRINT ONE RELASE IS V1.0.
 - v1.04: planned activity and ewo maintainer assignment page added and bug fixed
 - v1.05: materials page added 
 - v1.06: bug fixed
+- v1.07: some bug fix and minor style changes
 
