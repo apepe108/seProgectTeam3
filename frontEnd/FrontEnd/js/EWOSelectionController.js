@@ -148,15 +148,12 @@ class EWOSelectionController {
     addCompetencesChoices() {
         let controller = this;
         $.getJSON(controller.competencesViewEndpoint, function (data) {
-            $('#table-competence td').remove();
+            $('#table-competence tr').remove();
             let staticHtml = $("#competence-template").html();
             $.each(data, function (index, obj) {
                 let elem = staticHtml;
-                elem = elem.replace(/{Competence}/ig,
-                    "<div class='container d-inline-block'>" +
-                    "<input type='checkbox' name='skill-id' value='" + obj.id + "'>\t" +
-                    "<td>" + obj.name + "</td>" +
-                    "</div>");
+                elem = elem.replace(/{CompetenceId}/ig,obj.id);
+                elem = elem.replace(/{CompetenceName}/ig,obj.name);
                 $('#competence-rows').append(elem);
             });
         });
@@ -169,17 +166,15 @@ class EWOSelectionController {
     addMaterialsChoices() {
 
         let controller = this;
-        $('#table-material td').remove();
+        $('#table-material tr').remove();
         $.getJSON(controller.materialsEndPoint, function (data) {
             let staticHtml = $("#material-template").html();
             $.each(data, function (index, obj) {
                 let elem = staticHtml;
-                elem = elem.replace(/{Material}/ig,
-                    "<div class='container d-inline-block'>" +
-                    "<input type='checkbox' class='checkbox' name='materials' value='" + obj.id + "'>\t" +
-                    "<strong>" + obj.name + ":</strong>" +
-                    "<td>" + obj.description + "</td>" +
-                    "</div>");
+                elem = elem.replace(/{MaterialId}/ig, obj.id);
+                elem = elem.replace(/{MaterialName}/ig, obj.name);
+                elem = elem.replace(/{MaterialDescription}/ig, obj.description);
+
                 $('#material-rows').append(elem);
             });
         });

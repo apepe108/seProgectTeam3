@@ -121,12 +121,9 @@ class RoleCompetencesController {
         let staticHtml = $("#competence-template").html();
         $.each(data, function (index, obj) {
             let elem = staticHtml;
-            elem = elem.replace(/{Competence}/ig,
-                "<div class='container d-inline-block'>" +
-                "<input type='checkbox' class='checkbox' name='id-competence' value='" + obj.id + "'>\t" +
-                "<strong>" + obj.name + ":</strong>" +
-                "<td>" + obj.description + "</td>" +
-                "</div>");
+            elem = elem.replace(/{CompetenceId}/ig, obj.id);
+            elem = elem.replace(/{CompetenceName}/ig, obj.name);
+            elem = elem.replace(/{CompetenceDescription}/ig, obj.description);
             $('#competence-rows').append(elem);
         });
     }

@@ -289,16 +289,13 @@ class ActivityManageController {
      * @param modal the modal to render
      */
     addMaterialsCheckBoxes(data, modal) {
-        $(modal + ' td').remove();
+        $(modal + ' tr').remove();
         let staticHtml = $(modal + '-template').html();
         $.each(data, function (index, obj) {
             let elem = staticHtml;
-            elem = elem.replace(/{Material}/ig,
-                "<div class='container d-inline-block'>" +
-                "<input type='checkbox' class='checkbox' name='materials' value='" + obj.id + "'>\t" +
-                "<strong>" + obj.name + ":</strong>" +
-                "<td>" + obj.description + "</td>" +
-                "</div>");
+            elem = elem.replace(/{MaterialId}/ig, obj.id);
+            elem = elem.replace(/{MaterialName}/ig, obj.name);
+            elem = elem.replace(/{MaterialDescription}/ig, obj.description);
             $(modal + '-rows').append(elem);
         });
     }

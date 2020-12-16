@@ -45,7 +45,7 @@
 </nav>
 
 <header class="container">
-    <h1>Mantainer Assignment</h1>
+    <h5>Mantainer Assignment</h5>
 </header>
 
 <!-- Banner Alert template and his section -->
@@ -235,8 +235,7 @@
         controllerPlanned.initPage();
 
         // Listener on click on tables
-        $('#table-weekly-availability tbody').on("click", "td", null, controllerPlanned.handleClickOnWeekRow);
-        $('#table-daily-availability tbody tr').on("click", "td", null, controllerPlanned.handleClickOnDayRow);
+        $('#table-weekly-availability tbody ').on("click", "td", null, controllerPlanned.handleClickOnWeekRow);
 
         let searchParams = new URLSearchParams(window.location.search);
         if (searchParams.has('success')) {

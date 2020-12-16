@@ -128,7 +128,6 @@ class MaintainerAssignmentEWOController {
 
         $.getJSON(this.viewDailyEndPoint, data, function (data) {
 
-            $('#daily-label').text('AVAILABILITY ' + data.name);
             $.each(data, function (index, obj) {
                 let slotsData = "";
                 /* Bind obj data to the template, then append to table body */
