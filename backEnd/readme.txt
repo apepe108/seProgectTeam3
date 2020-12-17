@@ -1,6 +1,7 @@
 Directory used for share back end source code.
 
 SOURCE OF SPRINT ONE RELASE IS V1.0.
+SOURCE OF SPRINT TWO RELASE IS V1.7.
 
 - v0.01: object structured.
 - v0.02: maintainerRole functionality added.
