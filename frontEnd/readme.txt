@@ -1,6 +1,7 @@
 Directory used for share the front end source code.
 
 SOURCE OF SPRINT ONE RELASE IS V1.0.
+SOURCE OF SPRINT TWO RELASE IS V1.08.
 
 - v0.01: maintainerRole page added.
 - v0.02: roleCompetencies page added.
